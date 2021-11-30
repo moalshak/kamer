@@ -1,0 +1,9 @@
+openapi: 3.0.0
+info:
+  title: Team 13 API description
+  description: API for properties
+  version: 0.1.9
+
+paths:
+  /properties/{id}:
+    
