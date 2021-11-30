@@ -5,29 +5,101 @@ info:
   version: 0.1.9
 
 paths:
-  /properties/{id}:
-    get:
-      summary: Returns a property with a specified id
-      parameters:
-        - id
+  /properties:
+    post: 
+      operationId: postPropertyById
+      summary: Posts a property
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property_'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Property_'
       responses:
         '200':
-          description: 'description'
-  /properties/findByLocation?longitude=...&latitude=...:
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        
+  /properties/{id}:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: the id of the property
+          example: 5d2b113a43cbfd7c77a998f4
+    get:
+      operationId: getPropertyById
+      summary: Gets a property by id
+      description: This resource represents a description of the details of the property selected by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Property_'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put: 
+      operationId: putPropertyById
+      summary: Modifies a property by id
+      description: This resource modifies the details of an existing property selected by id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property_'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Property_'
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete: 
+      operationId: deletePropertyById
+      summary: Delete a property by id
+      description: This resource deletes a property from the database selected by id
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /properties/findByLocation?longitude={longitude}&latitude={latitude}:
     get:
       summary:
       parameters:
         - 
       responses:
 
-  /properties/{city}/findInRange?min=...&max=...:
+  /properties/{city}/findInRange?min={min}&max={max}:
     get:
       summary:
       parameters:
         - 
       responses:
 
-  /properties/{city}/findTopN?N=...&pricePerSqrMOrder=...:
+  /properties/{city}/findTopN?N={N}&pricePerSqrMOrder={pricePerSqrMOrder}:
     get :
       summary:
       parameters:
@@ -42,68 +114,130 @@ paths:
       responses:
     
 components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+        application/csv:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+        application/csv:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
     Property_:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          example: 5d2b113a43cbfd7c77a998f4
         areaSqm:
           type: integer
           format: int64
+          example: 14
         city: 
           type: string
+          example: Rotterdam
         furnish:
           type: string
+          example: Unfurnished
         latitude:
           type: string
+          example: 51.8966010000
         longitude:
           type: string
+          example: 4.5149930000
         postalCode:
           type: string
+          example: 3074HN
         postedAgo:
           type: string
+          example: 4w
         propertyType:
           type: string
+          example: Room
         rawAvailability:
           type: string
+          example: 26-06-'19 - Indefinite period
         rent:
-          type: string
+          type: integer
+          format: int32
+          example: 500
         source:
           type: string
+          example: kamernet
         title:
           type: string
+          example: West-Varkenoordseweg
         url: 
           type: string
+          example: "https://kamernet.nl/en/for-rent/room-rotterdam/west-varkenoordseweg/room-1686123"
         additionalCosts:
           type: integer
           format: int32
+          example: 50
         deposit: 
           type: integer
           format: int32
+          example: 500
         descriptionNonTranslated:
           type: string
+          example: Nice room for rent, accros the Feyenoord stadium in Rotterdam. It has shared Bathroom and kitchen. There are a few room for rent in the building, so if you maybe like to live with your friends, this is maybe an option. Pls contact us for more information.
         descriptionTranslated:
           type: string
+          example: Nice room for rent, accros the Feyenoord stadium in Rotterdam. It has shared Bathroom and kitchen. There are a few room for rent in the building, so if you maybe like to live with your friends, this is maybe an option. Pls contact us for more information.
         gender:
           type: string
+          example: mixed
         internet:
           type: string
+          enum:
+            - Yes
+            - No
+          example: Yes
         matchCapacity:
           type: string
+          example: 1
         matchGender:
           type: string
+          example: Not important
         pageDescription:
           type: string
+          example: Room for rent in Rotterdam, West-Varkenoordseweg, for €500 a month. Interested? React now!
         pageTitle: 
           type: string
+          example: Room for rent in Rotterdam €500 | Kamernet
         registrationCost:
           type: integer
           format: int32
+          example: 0
         userDisplayName:
           type: string
+          example: Huize west
         userId:
           type: string
+          example: 4680711
         userPhotoUrl:
           type: string
+          example: https://resources.kamernet.nl/Content/images/studenthouse/SH Placeholder.png
