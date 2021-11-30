@@ -9,7 +9,7 @@ paths:
     get:
       summary: Returns a property with a specified id
       parameters:
-        - 
+        - id
       responses:
         '200':
           description: 'description'
@@ -43,8 +43,67 @@ paths:
     
 components:
   schemas:
-    Propertyy:
+    Property_:
       type: object
       properties:
         id:
-          type: integer 
+          type: string
+          format: uuid
+        areaSqm:
+          type: integer
+          format: int64
+        city: 
+          type: string
+        furnish:
+          type: string
+        latitude:
+          type: string
+        longitude:
+          type: string
+        postalCode:
+          type: string
+        postedAgo:
+          type: string
+        propertyType:
+          type: string
+        rawAvailability:
+          type: string
+        rent:
+          type: string
+        source:
+          type: string
+        title:
+          type: string
+        url: 
+          type: string
+        additionalCosts:
+          type: integer
+          format: int32
+        deposit: 
+          type: integer
+          format: int32
+        descriptionNonTranslated:
+          type: string
+        descriptionTranslated:
+          type: string
+        gender:
+          type: string
+        internet:
+          type: string
+        matchCapacity:
+          type: string
+        matchGender:
+          type: string
+        pageDescription:
+          type: string
+        pageTitle: 
+          type: string
+        registrationCost:
+          type: integer
+          format: int32
+        userDisplayName:
+          type: string
+        userId:
+          type: string
+        userPhotoUrl:
+          type: string
