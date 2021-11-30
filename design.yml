@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.0  
 info:
   title: Team 13 API description
   description: API for properties
@@ -6,4 +6,45 @@ info:
 
 paths:
   /properties/{id}:
+    get:
+      summary: Returns a property with a specified id
+      parameters:
+        - 
+      responses:
+        '200':
+          description: 'description'
+  /properties/findByLocation?longitude=...&latitude=...:
+    get:
+      summary:
+      parameters:
+        - 
+      responses:
+
+  /properties/{city}/findInRange?min=...&max=...:
+    get:
+      summary:
+      parameters:
+        - 
+      responses:
+
+  /properties/{city}/findTopN?N=...&pricePerSqrMOrder=...:
+    get :
+      summary:
+      parameters:
+        - 
+      responses:
     
+  /stats/{city}:
+    get:
+      summary:
+      parameters:
+        - 
+      responses:
+    
+components:
+  schemas:
+    Propertyy:
+      type: object
+      properties:
+        id:
+          type: integer 
