@@ -26,7 +26,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
         
-  /properties/{id}:
+  /properties/{id}?contentType={contentType}:
     parameters:
         - in: path
           name: id
@@ -35,6 +35,13 @@ paths:
             type: string
           description: the id of the property
           example: 5d2b113a43cbfd7c77a998f4
+        - in: query
+          name: contentType
+          required: false
+          schema:
+            $ref: '#/components/schemas/contentType'
+            default: application/json
+            example: application/json
     get:
       operationId: getPropertyById
       summary: Gets a property by id
@@ -85,9 +92,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /properties/findByLocation?longitude={longitude}&latitude={latitude}:
-    # parameters:
-      # -
+  /properties/findByLocation?contentType={contentType}&longitude={longitude}&latitude={latitude}:
     get:
       operationId: getPropertyByLocation
       summary: Gets a property by location (longitude, latitude)
@@ -95,18 +100,14 @@ paths:
         '200':
          description: OK
 
-  /properties/{city}/findInRange?min={min}&max={max}:
-    # parameters:
-    #   - 
+  /properties/{city}/findInRange?contentType={contentType}&min={min}&max={max}:
     get:
       summary: summary here
       responses:
         '200':
           description: OK
 
-  /properties/{city}/findTopN?N={N}&pricePerSqrMOrder={pricePerSqrMOrder}:
-    # parameters:
-    #   - 
+  /properties/{city}/findTopN?N={N}&contentType={contentType}&pricePerSqrMOrder={pricePerSqrMOrder}:
     get :
       summary: summary here
       responses:
@@ -166,6 +167,13 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    contentType:
+      type: string
+      enum:
+        - application/json
+        - text/csv
+      default: application/json
+      example: application/json
     Error:
       type: object
       properties:
