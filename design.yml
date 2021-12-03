@@ -9,7 +9,7 @@ servers:
 
 paths:
  
-  /properties:
+  /properties/addProperty:
     post: 
       tags:
         - Properties by Id
@@ -35,7 +35,7 @@ paths:
           $ref: '#/components/responses/ServerError'
      
         
-  /properties/{id}?contentType={contentType}:
+  /properties/{id}:
   
     parameters:
         - $ref: '#/components/parameters/id'
@@ -106,7 +106,7 @@ paths:
           $ref: '#/components/responses/ServerError'
 
 
-  /properties/findByLocation?contentType={contentType}&longitude={longitude}&latitude={latitude}:
+  /properties/location:
     parameters:
       - $ref: '#/components/parameters/contentType'
       - $ref: '#/components/parameters/longitude'
@@ -168,7 +168,7 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
 
-  /properties/{city}/findInRange?contentType={contentType}&min={min}&max={max}: 
+  /properties/{city}/findInRange: 
     parameters:
       - $ref: '#/components/parameters/city'
       - $ref: '#/components/parameters/contentType'
@@ -190,7 +190,7 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
 
-  /properties/{city}/findTopN?N={N}&contentType={contentType}&budget={budget}&order={ascOrDesc}:
+  /properties/{city}/rentBudget:
     parameters:
       - $ref: '#/components/parameters/city'
       - $ref: '#/components/parameters/contentType'
@@ -201,7 +201,7 @@ paths:
       tags:
         - Find Top N Properties By Budget
       operationId: getPropertiesByBudget
-      summary: Returns top n properties based on budget.
+      summary: Returns top N properties based on budget.
       description: Retrieves a list of the top N of all properties in a city that are active for renting in either ascending or descending order based on their rental cost, with a default value of N = 10.
       responses:
         '200':
@@ -213,7 +213,7 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
 
-  /properties/{city}/findTopN?N={N}&contentType={contentType}&pricePerSqrMOrder={pricePerSqrMOrder}&order={ascOrDesc}:
+  /properties/{city}/meterBudget:
     parameters:
         - $ref: '#/components/parameters/city'
         - $ref: '#/components/parameters/contentType'
