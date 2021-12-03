@@ -131,13 +131,42 @@ paths:
       tags:
         - Properties by Location
       operationId: putPropertyByLocation
-      summary: Updates a property based on its location
+      summary: Updates a property based on its location.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property_'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Property_'
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+      
     
     delete:
       tags:
         - Properties by Location
       operationId: deletePropertyByLocation
-      summary: delete properties in
+      summary: delete properties by latitude and longitude
+      description: deletes all properties in the given latitude and longitude
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
 
   /properties/{city}/findInRange?contentType={contentType}&min={min}&max={max}: 
     parameters:
@@ -154,6 +183,8 @@ paths:
       responses:
         '200':  
           description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
         '5XX':
@@ -175,6 +206,8 @@ paths:
       responses:
         '200':
           description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
         '5XX':
@@ -196,6 +229,8 @@ paths:
       responses:
         '200':
           description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
         '5XX':
