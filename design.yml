@@ -4,10 +4,16 @@ info:
   description: API for properties
   version: 0.1.9
 
+servers:
+  - url: https://api.server.test/v1
+
 paths:
-  /properties: # I think we should add a '/addProperty' - Mohammad
+ 
+  /properties:
     post: 
-      operationId: postPropertyById
+      tags:
+        - Properties by Id
+      operationId: postProperty
       summary: Posts a property
       requestBody:
         required: true
@@ -19,30 +25,25 @@ paths:
             schema:
               $ref: '#/components/schemas/Property_'
       responses:
-        '201': # 201 for created
+        '201':
           description: OK
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+     
         
   /properties/{id}?contentType={contentType}:
+  
     parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: the id of the property
-          example: 5d2b113a43cbfd7c77a998f4
-        - in: query
-          name: contentType
-          required: false
-          schema:
-            $ref: '#/components/schemas/contentType'
-            default: application/json
-            example: application/json
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/contentType'
+
     get:
+      tags:
+        - Properties by Id
       operationId: getPropertyById
       summary: Gets a property by id
       description: This resource represents a description of the details of the property selected by id
@@ -60,7 +61,12 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
     put: 
+      tags:
+        - Properties by Id
       operationId: putPropertyById
       summary: Modifies a property by id
       description: This resource modifies the details of an existing property selected by id
@@ -80,7 +86,12 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
     delete: 
+      tags:
+        - Properties by Id
       operationId: deletePropertyById
       summary: Delete a property by id
       description: This resource deletes a property from the database selected by id
@@ -91,62 +102,242 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
 
   /properties/findByLocation?contentType={contentType}&longitude={longitude}&latitude={latitude}:
+    parameters:
+      - $ref: '#/components/parameters/contentType'
+      - $ref: '#/components/parameters/longitude'
+      - $ref: '#/components/parameters/latitude'
+
     get:
+      tags:
+        - Properties by Location
       operationId: getPropertyByLocation
       summary: Gets a property by location (longitude, latitude)
       responses:
         '200':
          description: OK
-
-  /properties/{city}/findInRange?contentType={contentType}&min={min}&max={max}:
-    get:
-      summary: summary here
-      responses:
-        '200':
-          description: OK
-
-  /properties/{city}/findTopN?N={N}&contentType={contentType}&pricePerSqrMOrder={pricePerSqrMOrder}:
-    get :
-      summary: summary here
-      responses:
-        '200':
-          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+          
+    put:
+      tags:
+        - Properties by Location
+      operationId: putPropertyByLocation
+      summary: Updates a property based on its location
     
+    delete:
+      tags:
+        - Properties by Location
+      operationId: deletePropertyByLocation
+      summary: delete properties in
+
+  /properties/{city}/findInRange?contentType={contentType}&min={min}&max={max}: 
+    parameters:
+      - $ref: '#/components/parameters/city'
+      - $ref: '#/components/parameters/contentType'
+      - $ref: '#/components/parameters/min'
+      - $ref: '#/components/parameters/max'
+    get:
+      tags:
+        - Find Properties in Range
+      operationId: getPropertiesInRange
+      summary: get properties in city in range
+      description: returns list of properties within a min and max range in a given city
+      responses:
+        '200':  
+          description: OK
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
+  /properties/{city}/findTopN?N={N}&contentType={contentType}&budget={budget}&order={ascOrDesc}:
+    parameters:
+      - $ref: '#/components/parameters/city'
+      - $ref: '#/components/parameters/contentType'
+      - $ref: '#/components/parameters/N'
+      - $ref: '#/components/parameters/budget'
+      - $ref: '#/components/parameters/ascOrDesc'
+    get:
+      tags:
+        - Find Top N Properties By Budget
+      operationId: getPropertiesByBudget
+      summary: Returns top n properties based on budget.
+      description: Retrieves a list of the top N of all properties in a city that are active for renting in either ascending or descending order based on their rental cost, with a default value of N = 10.
+      responses:
+        '200':
+          description: OK
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
+  /properties/{city}/findTopN?N={N}&contentType={contentType}&pricePerSqrMOrder={pricePerSqrMOrder}&order={ascOrDesc}:
+    parameters:
+        - $ref: '#/components/parameters/city'
+        - $ref: '#/components/parameters/contentType'
+        - $ref: '#/components/parameters/N'
+        - $ref: '#/components/parameters/pricePerSqrMOrder'
+        - $ref: '#/components/parameters/ascOrDesc'
+    get:
+      tags:
+        - Find Top N Properties By SqMeter Price
+      operationId: getPropertiesBySqMeter
+      summary: Returns top n properties based on price per square meter.
+      description: Retrieves a list of the top N of all properties in a city that are active for renting in either ascending or descending order based on their price per square meter, with a default value of N = 10.
+      responses:
+        '200':
+          description: OK
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    
+
   /stats/{city}:
     parameters:
-      - in: path
-        name: cityName
-        required: true
-        schema:
-          type: string
-        description: The name of the city
-        example: Rotterdam
+      - $ref: '#/components/parameters/city'
+          
     get:
-      summary: gets all properties in a given city
+      tags:
+        - Stats
+      summary: Gets mean, median and standard deviation for rental cost and required deposit.
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Property_'
+                $ref: '#/components/schemas/CityStats'
             text/csv:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Property_'
+                $ref: '#/components/schemas/CityStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
-          description: City not found
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
 
 ### 
 ### COMPONENTS PART
 ###
 
 components:
+
+  parameters:
+  
+    contentType:
+      name: contentType
+      in: query
+      required: false
+      description: The content type the page will return. Can be json or csv.
+      schema:
+        $ref: '#/components/schemas/contentType'
+        
+    city: 
+      name: city
+      in: path
+      required: true
+      description: The name of the city
+      schema: 
+        $ref: '#/components/schemas/city'
+    
+    id:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        description: the id of the property
+        example: room-1690812
+    
+    min: 
+      in: query
+      name: min
+      required: true
+      example: 400
+      schema:
+        type: number
+      description: the minimum rental price
+      
+    max: 
+      in: query
+      name: min
+      required: true
+      example: 1200
+      schema:
+        type: number
+      description: the maximum rental price
+    
+    N:
+      in: query
+      name: N
+      required: false
+      schema:
+        type: integer
+        default: 10
+      description: the number of properties you want to see
+      example: 4
+      
+    ascOrDesc:
+      in: query
+      name: ascOrDesc
+      required: false
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+        default: asc
+      description: the way to order the result data
+      example: desc
+
+    pricePerSqrMOrder:
+      in: query
+      name: pricePerSqrMOrder
+      required: true
+      schema:
+        type: integer
+      description: the price per square meter of properties in the city
+      example: 25
+
+    budget:
+      in: query
+      name: budget
+      required: true
+      schema:
+        type: integer
+      description: the budget for the properties in the area
+      example: 25000
+    
+    longitude:
+        in: query
+        name: longitude
+        required: true
+        schema:
+          type: number
+        description: latitude of the property
+        example: 53.2216926
+    
+    latitude:
+      in: query
+      name: latitude
+      required: true
+      description: The latitude of the location
+      schema:
+        type: integer
+        format: double
+      example: 6.5656198
+      
   responses:
     NotFound:
       description: The specified resource was not found
@@ -154,7 +345,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-        application/csv:
+        text/csv:
           schema:
             $ref: '#/components/schemas/Error'
     Unauthorized:
@@ -163,10 +354,56 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-        application/csv:
+        text/csv:
           schema:
             $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error; no results, try again later
+      content:
+        application/json: 
+          schema: 
+            $ref: '#/components/schemas/Error'
+        ext/csv:
+          schema:
+            $ref: '#/components/schemas/Error'
+          
+          
   schemas:
+  
+    city:
+      type: string
+      description: The name of the city
+      example: Rotterdam
+      
+    CityStats:
+      type: object
+      properties:
+        rcMean: 
+          type: number
+          format: double
+          example: 512.23
+        rcMedian:
+          type: number
+          format: double
+          example: 600.23
+        rcStandardDeviation:
+          type: number
+          format: double
+          example: 51.34
+        rdMean: 
+          type: number
+          format: double
+          example: 547.23
+        rdMedian:
+          type: number
+          format: double
+          example: 400.23
+        rdStandardDeviation:
+          type: number
+          format: double
+          example: 39.34
+        
+
     contentType:
       type: string
       enum:
@@ -174,6 +411,8 @@ components:
         - text/csv
       default: application/json
       example: application/json
+
+      
     Error:
       type: object
       properties:
@@ -185,13 +424,13 @@ components:
         - code
         - message
 
+
     Property_:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          example: 5d2b113a43cbfd7c77a998f4
+          example: room-1690812
         areaSqm:
           type: integer
           format: int64
