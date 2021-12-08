@@ -120,6 +120,13 @@ paths:
       responses:
         '200':
          description: OK
+         content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Property_'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -183,6 +190,17 @@ paths:
       responses:
         '200':  
           description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -206,6 +224,17 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -229,6 +258,17 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -261,6 +301,74 @@ paths:
           $ref: '#/components/responses/NotFound'
         '5XX':
           $ref: '#/components/responses/ServerError'
+  
+
+  /properties/{city}/area:
+    parameters:
+      - $ref: '#/components/parameters/city'
+      - $ref: '#/components/parameters/min'
+      - $ref: '#/components/parameters/max'
+      - $ref: '#/components/parameters/N'
+      - $ref: '#/components/parameters/ascOrDesc'
+
+    get:
+      tags:
+        - Find properties by area requirements
+      summary: Returns the list of N properties that have an area between the min and the max specified in the query.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
+  /properties/{city}/pets:
+    parameters:
+      - $ref: '#/components/parameters/city'
+      - $ref: '#components/parameters/pets'
+      - $ref: '#/components/parameters/N'
+      - $ref: '#/components/parameters/ascOrDesc'
+
+    get:
+      tags:
+        - Find properties by pets allowed
+      summary: Returns the list of N properties that allow or not allow pets.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
+
 
 ### 
 ### COMPONENTS PART
@@ -302,7 +410,7 @@ components:
       example: 400
       schema:
         type: number
-      description: the minimum rental price
+      description: a minimum
       
     max: 
       in: query
@@ -311,7 +419,7 @@ components:
       example: 1200
       schema:
         type: number
-      description: the maximum rental price
+      description: a maximum
     
     N:
       in: query
@@ -372,6 +480,18 @@ components:
         type: integer
         format: double
       example: 6.5656198
+    
+    pets: 
+      in: query
+      name: pets
+      required: true
+      schema:
+        type: string
+        enum:
+          - Yes
+          - No
+      description: Wether or not pets are allowed in the room.
+      example: Yes
       
   responses:
     NotFound:
@@ -542,6 +662,12 @@ components:
         pageTitle: 
           type: string
           example: Room for rent in Rotterdam €500 | Kamernet
+        pets: 
+          type: string
+          enum:
+            - Yes
+            - No
+          example: Yes
         registrationCost:
           type: integer
           format: int32
