@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # own added apps
     # <folder>.apps.<Folder>Config
     'properties.apps.PropertiesConfig',
+
 ]
 
 MIDDLEWARE = [
