@@ -279,7 +279,7 @@ components:
     minArea: 
       in: query
       name: min
-      required: true
+      required: false
       example: 400
       schema:
         type: number
@@ -288,7 +288,7 @@ components:
     maxArea: 
       in: query
       name: min
-      required: true
+      required: false
       example: 1200
       schema:
         type: number
@@ -297,7 +297,7 @@ components:
     minRange: 
       in: query
       name: min
-      required: true
+      required: false
       example: 400
       schema:
         type: number
@@ -306,7 +306,7 @@ components:
     maxRange: 
       in: query
       name: min
-      required: true
+      required: false
       example: 1200
       schema:
         type: number
@@ -338,7 +338,7 @@ components:
     pricePerSqrMOrder:
       in: query
       name: pricePerSqrMOrder
-      required: true
+      required: false
       schema:
         type: integer
       description: the price per square meter of properties in the city
@@ -347,7 +347,7 @@ components:
     budget:
       in: query
       name: budget
-      required: true
+      required: false
       schema:
         type: integer
       description: the budget for the properties in the area
@@ -375,7 +375,7 @@ components:
     pets: 
       in: query
       name: pets
-      required: true
+      required: false
       schema:
         type: string
         enum:
