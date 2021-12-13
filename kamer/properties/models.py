@@ -15,7 +15,6 @@ class Property(models.Model):
     propertyType = models.TextField(null=False)
     rent = models.IntegerField(null=False)
     title = models.TextField(null=True)
-    # additionalCost  = models.IntegerField(null=True)
     deposit = models.IntegerField(null=True)
     descriptionTranslated = models.TextField(null=True)
     gender = models.TextField(null=True)
