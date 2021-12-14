@@ -175,24 +175,18 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
 
-  /properties/{city}: 
+  /properties/{city}/findInRange: 
     parameters:
       - $ref: '#/components/parameters/city'
-      - $ref: '#/components/parameters/minRange'
-      - $ref: '#/components/parameters/maxRange'
-      - $ref: '#/components/parameters/N'
-      - $ref: '#/components/parameters/budget'
-      - $ref: '#/components/parameters/ascOrDesc'
-      - $ref: '#/components/parameters/pricePerSqrMOrder'
-      - $ref: '#/components/parameters/minArea'
-      - $ref: '#/components/parameters/maxArea'
-      - $ref: '#components/parameters/pets'
+      - $ref: '#/components/parameters/contentType'
+      - $ref: '#/components/parameters/min'
+      - $ref: '#/components/parameters/max'
     get:
       tags:
-        - Find Properties by city and filter
-      operationId: getPropertiesByCityByFilter
-      summary: get properties in city by filters
-      description: returns list of properties in a given city with a range of filters
+        - Find Properties in Range
+      operationId: getPropertiesInRange
+      summary: get properties in city in range
+      description: returns list of properties within a min and max range in a given city
       responses:
         '200':  
           description: OK
@@ -214,7 +208,74 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
 
+  /properties/{city}/rentBudget:
+    parameters:
+      - $ref: '#/components/parameters/city'
+      - $ref: '#/components/parameters/contentType'
+      - $ref: '#/components/parameters/N'
+      - $ref: '#/components/parameters/budget'
+      - $ref: '#/components/parameters/ascOrDesc'
+    get:
+      tags:
+        - Find Top N Properties By Budget
+      operationId: getPropertiesByBudget
+      summary: Returns top N properties based on budget.
+      description: Retrieves a list of the top N of all properties in a city that are active for renting in either ascending or descending order based on their rental cost, with a default value of N = 10.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
 
+  /properties/{city}/meterBudget:
+    parameters:
+        - $ref: '#/components/parameters/city'
+        - $ref: '#/components/parameters/contentType'
+        - $ref: '#/components/parameters/N'
+        - $ref: '#/components/parameters/pricePerSqrMOrder'
+        - $ref: '#/components/parameters/ascOrDesc'
+    get:
+      tags:
+        - Find Top N Properties By SqMeter Price
+      operationId: getPropertiesBySqMeter
+      summary: Returns top n properties based on price per square meter.
+      description: Retrieves a list of the top N of all properties in a city that are active for renting in either ascending or descending order based on their price per square meter, with a default value of N = 10.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    
 
   /stats/{city}:
     parameters:
@@ -241,6 +302,72 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
   
+
+  /properties/{city}/area:
+    parameters:
+      - $ref: '#/components/parameters/city'
+      - $ref: '#/components/parameters/min'
+      - $ref: '#/components/parameters/max'
+      - $ref: '#/components/parameters/N'
+      - $ref: '#/components/parameters/ascOrDesc'
+
+    get:
+      tags:
+        - Find properties by area requirements
+      summary: Returns the list of N properties that have an area between the min and the max specified in the query.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
+  /properties/{city}/pets:
+    parameters:
+      - $ref: '#/components/parameters/city'
+      - $ref: '#components/parameters/pets'
+      - $ref: '#/components/parameters/N'
+      - $ref: '#/components/parameters/ascOrDesc'
+
+    get:
+      tags:
+        - Find properties by pets allowed
+      summary: Returns the list of N properties that allow or not allow pets.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+            text/csv:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property_'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
 
 
 ### 
@@ -276,37 +403,19 @@ components:
         description: the id of the property
         example: room-1690812
     
-    minArea: 
+    min: 
       in: query
       name: min
-      required: false
+      required: true
       example: 400
       schema:
         type: number
       description: a minimum
       
-    maxArea: 
+    max: 
       in: query
       name: min
-      required: false
-      example: 1200
-      schema:
-        type: number
-      description: a maximum
-
-    minRange: 
-      in: query
-      name: min
-      required: false
-      example: 400
-      schema:
-        type: number
-      description: a minimum
-      
-    maxRange: 
-      in: query
-      name: min
-      required: false
+      required: true
       example: 1200
       schema:
         type: number
@@ -338,7 +447,7 @@ components:
     pricePerSqrMOrder:
       in: query
       name: pricePerSqrMOrder
-      required: false
+      required: true
       schema:
         type: integer
       description: the price per square meter of properties in the city
@@ -347,7 +456,7 @@ components:
     budget:
       in: query
       name: budget
-      required: false
+      required: true
       schema:
         type: integer
       description: the budget for the properties in the area
@@ -375,7 +484,7 @@ components:
     pets: 
       in: query
       name: pets
-      required: false
+      required: true
       schema:
         type: string
         enum:
