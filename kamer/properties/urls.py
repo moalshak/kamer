@@ -1,6 +1,6 @@
 from django.urls import path
-from django.urls.conf import re_path
-from django.urls.resolvers import URLPattern
+from rest_framework.urlpatterns import format_suffix_patterns
+
 from . import views
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('pref/<str:city>/', views.get_propertyByCityPreferences),
     path('stats/<str:city>/', views.stats, name="getStats")
 ]
+urlpatterns = format_suffix_patterns(urlpatterns)
 

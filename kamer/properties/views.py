@@ -16,6 +16,7 @@ from properties.serializers import PropertySerializer, StatsSerializer
 
 # Create your views here.
 
+@api_view(['GET'])
 def home(request):
     properties = Property.objects.all()
     serializer = PropertySerializer(properties, many=True)
@@ -31,7 +32,14 @@ def add_property(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def getProperty(request, externalId):
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@renderer_classes([JSONRenderer, CSVRenderer])
+def property_by_id(request, externalId):
+    try:
+        p = Property.objects.get(externalId=externalId)
+    except Property.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
         serializer = PropertySerializer(p)
         return Response(serializer.data)
