@@ -34,8 +34,8 @@ def add_property(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@renderer_classes([JSONRenderer, CSVRenderer])
-def property_by_id(request, externalId):
+@renderer_classes((JSONRenderer, CSVRenderer))
+def property_by_id(request, externalId, format=None):
     try:
         p = Property.objects.get(externalId=externalId)
     except Property.DoesNotExist:
@@ -131,6 +131,7 @@ def locationHelper(latitude, longitude, request):
 
 
 @api_view(['GET'])
+@renderer_classes((JSONRenderer, CSVRenderer))
 def stats(request, city):
     if request.method == 'GET':
         p = Property.objects.filter(city=city)
@@ -159,7 +160,6 @@ def stats(request, city):
         # rdMedian = deposit[len/2]
         # rcSd = statistics.stdev(rent)
         # rdSd = statistics.stdev(deposit)
-        print(deposit)
         stats = Stats(rcMean = float(rcSum) / len, rdMean = float(rdSum) / len, rcMedian = rent[int(len/2)], rdMedian = deposit[int(len/2)], rcSd = statistics.stdev(rent), rdSd = statistics.stdev(deposit))
         serializer = StatsSerializer(stats)
         return Response(serializer.data)
