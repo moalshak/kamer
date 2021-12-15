@@ -55,7 +55,8 @@ def property_by_id(request, externalId, format=None):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def get_propertyByLocation(request):
+@renderer_classes((JSONRenderer, CSVRenderer))
+def get_propertyByLocation(request, format=None):
     if request.method == 'GET':
         latitude = request.GET.get("latitude", '0')
         longitude = request.GET.get("longitude", '0')
@@ -74,8 +75,9 @@ def get_propertyByLocation(request):
 
 
 @api_view(['GET'])
+@renderer_classes((JSONRenderer, CSVRenderer))
 #todo nResults using pagination
-def get_propertyByCityPreferences(request, city):
+def get_propertyByCityPreferences(request, city, format=None):
     if request.method == 'GET':
 
         #TODO review api
@@ -132,7 +134,7 @@ def locationHelper(latitude, longitude, request):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
-def stats(request, city):
+def stats(request, city, format=None):
     if request.method == 'GET':
         p = Property.objects.filter(city=city)
 
