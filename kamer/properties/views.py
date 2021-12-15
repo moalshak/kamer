@@ -10,8 +10,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework_csv.renderers import CSVRenderer
 
-from properties.models import Property
-from properties.serializers import PropertySerializer, StatsSerializer
+from .models import Property
+from .serializers import PropertySerializer, StatsSerializer
 
 
 # Create your views here.
@@ -57,17 +57,19 @@ def property_by_id(request, externalId):
 @api_view(['GET', 'PUT', 'DELETE'])
 def get_propertyByLocation(request):
     if request.method == 'GET':
-        latitude = request.GET.get("latitude", None)
-        longitude = request.GET.get("longitude", None)
+        latitude = request.GET.get("latitude", '0')
+        longitude = request.GET.get("longitude", '0')
+
         return locationHelper(latitude, longitude, request)
     elif request.method == 'PUT':
-        latitude = request.PUT.get("latitude", None)
-        longitude = request.PUT.get("longitude", None)
+        latitude = request.PUT.get("latitude", '0')
+        longitude = request.PUT.get("longitude", '0')
+        l = request.PUT
         return locationHelper(latitude, longitude, request)
 
     elif request.method == 'DELETE':
-        latitude = request.DELETE.get("latitude", None)
-        longitude = request.DELETE.get("longitude", None)
+        latitude = request.DELETE.get("latitude", '0')
+        longitude = request.DELETE.get("longitude", '0')
         return locationHelper(latitude, longitude, request)
 
 
@@ -116,11 +118,16 @@ def locationHelper(latitude, longitude, request):
         p = Property.objects.filter(latitude=latitude).filter(longitude=longitude)
     except Property.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    serializer = PropertySerializer(p, many=True)
-    if serializer.is_valid() & request.method == 'PUT':
+    if request.method == 'PUT':
+        serializer = PropertySerializer(data=request.data)
         serializer.save()
-    elif serializer.is_valid() & request.method == 'DELETE':
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    elif request.method == 'DELETE':
         p.delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    elif request.method == 'GET':
+        serializer = PropertySerializer(p, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
