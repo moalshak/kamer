@@ -93,33 +93,35 @@ def locationHelper(latitude, longitude, request):
 def get_propertyByCityPreferences(request, city, format=None):
     if request.method == 'GET':
 
-        # TODO review api
-        # Budget
-        # budget = request.GET.get('budget', None)
-        # Sqaure meter budget
-        # sqmBudget = request.GET.get('sqmBudget', None)
-
         orderBY = request.GET.get('orderBY', 'rent')
         ascOrDesc = request.GET.get('ascOrDesc', 'ASC')
 
         # Price Range
-        deafaultMaxRange = Property.objects.aggregate(Max('rent'))['rent__max']
-        minRange = D(request.GET.get('minRange', 0))
-        maxRange = D(request.GET.get('maxRange', deafaultMaxRange))
+        defaultMaxPrice = Property.objects.aggregate(Max('rent'))['rent__max']
+        minPrice = D(request.GET.get('minPrice', 0))
+        maxPrice = D(request.GET.get('maxPrice', defaultMaxPrice))
 
         # Pets
         pets_choice = request.GET.get('pets', '%')
 
         # Area
-        deafaultMaxArea = Property.objects.aggregate(Max('areaSqm'))['areaSqm__max']
+        defaultMaxArea = Property.objects.aggregate(Max('areaSqm'))['areaSqm__max']
         minArea = int(request.GET.get('minArea', 0))
-        maxArea = int(request.GET.get('maxArea', deafaultMaxArea))
+        maxArea = int(request.GET.get('maxArea', defaultMaxArea))
+
+        # Sqaure meter budget
+        sqmBudget = D(request.GET.get('sqmBudget', defaultMaxPrice/defaultMaxArea))
+
+        N = D(request.GET.get('N', 10))
+
         query = f"SELECT * FROM properties_property " \
                 f"WHERE city LIKE '{city}' " \
                 f"AND areaSqm BETWEEN {minArea} AND {maxArea} " \
-                f"AND rent BETWEEN {minRange} AND {maxRange} " \
+                f"AND rent BETWEEN {minPrice} AND {maxPrice} " \
                 f"AND pets LIKE '{pets_choice}' " \
-                f" ORDER BY {orderBY} {ascOrDesc} "
+                f"AND rent / areaSqm <= {sqmBudget} " \
+                f" ORDER BY {orderBY} {ascOrDesc} " \
+                f"LIMIT {N};"
 
         try:
             p = Property.objects.raw(query)
