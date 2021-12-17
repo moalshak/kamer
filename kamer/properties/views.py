@@ -6,7 +6,7 @@ from django.db.models import Max
 from django.template.defaultfilters import length
 from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.response import Response
 from rest_framework_csv.renderers import CSVRenderer
 
@@ -24,11 +24,11 @@ def home(request):
 
 
 @api_view(['POST'])
+@renderer_classes((JSONRenderer, CSVRenderer))
 def add_property(request):
     serializer = PropertySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        Property.objects.create(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,30 +57,43 @@ def property_by_id(request, externalId, format=None):
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((JSONRenderer, CSVRenderer))
 def get_propertyByLocation(request, format=None):
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'PUT' or request.method == 'DELETE':
         latitude = request.GET.get("latitude", '0')
         longitude = request.GET.get("longitude", '0')
-
-        return locationHelper(latitude, longitude, request)
-    elif request.method == 'PUT':
-        latitude = request.PUT.get("latitude", '0')
-        longitude = request.PUT.get("longitude", '0')
-        l = request.PUT
         return locationHelper(latitude, longitude, request)
 
+
+def locationHelper(latitude, longitude, request):
+    try:
+        p = Property.objects.filter(latitude=latitude).filter(longitude=longitude)
+    except Property.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    ids = []
+    for p_ in p:
+        ids.append(p_.externalId)
+
+    if request.method == 'PUT':
+        for id_ in ids:
+            p2 = Property.objects.get(externalId=id_)
+            for key in request.data.keys():
+                setattr(p2, str(key), request.data[key])
+            p2.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
     elif request.method == 'DELETE':
-        latitude = request.DELETE.get("latitude", '0')
-        longitude = request.DELETE.get("longitude", '0')
-        return locationHelper(latitude, longitude, request)
+        p.delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    elif request.method == 'GET':
+        serializer = PropertySerializer(p, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
-#todo nResults using pagination
+# todo nResults using pagination
 def get_propertyByCityPreferences(request, city, format=None):
     if request.method == 'GET':
 
-        #TODO review api
+        # TODO review api
         # Budget
         # budget = request.GET.get('budget', None)
         # Sqaure meter budget
@@ -102,34 +115,18 @@ def get_propertyByCityPreferences(request, city, format=None):
         minArea = int(request.GET.get('minArea', 0))
         maxArea = int(request.GET.get('maxArea', deafaultMaxArea))
         query = f"SELECT * FROM properties_property " \
-                    f"WHERE areaSqm BETWEEN {minArea} AND {maxArea} " \
-                    f"AND rent BETWEEN {minRange} AND {maxRange} " \
-                    f"AND pets LIKE '{pets_choice}' " \
-                    f" ORDER BY {orderBY} {ascOrDesc} "
-        
+                f"WHERE city LIKE '{city}' " \
+                f"AND areaSqm BETWEEN {minArea} AND {maxArea} " \
+                f"AND rent BETWEEN {minRange} AND {maxRange} " \
+                f"AND pets LIKE '{pets_choice}' " \
+                f" ORDER BY {orderBY} {ascOrDesc} "
+
         try:
-            p = Property.objects.filter(city=city).raw(query)
+            p = Property.objects.raw(query)
         except Property.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = PropertySerializer(p, many=True)
         return Response(serializer.data)
-
-
-def locationHelper(latitude, longitude, request):
-    try:
-        p = Property.objects.filter(latitude=latitude).filter(longitude=longitude)
-    except Property.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'PUT':
-        serializer = PropertySerializer(data=request.data)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-    elif request.method == 'DELETE':
-        p.delete()
-        return Response(status=status.HTTP_202_ACCEPTED)
-    elif request.method == 'GET':
-        serializer = PropertySerializer(p, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -156,16 +153,12 @@ def stats(request, city, format=None):
         rent.sort()
         deposit.sort()
 
-        # rcMean = float(rcSum) / len
-        # rdMean = float(rdSum) / len
-        # rcMedian = rent[len/2]
-        # rdMedian = deposit[len/2]
-        # rcSd = statistics.stdev(rent)
-        # rdSd = statistics.stdev(deposit)
-        stats = Stats(rcMean = float(rcSum) / len, rdMean = float(rdSum) / len, rcMedian = rent[int(len/2)], rdMedian = deposit[int(len/2)], rcSd = statistics.stdev(rent), rdSd = statistics.stdev(deposit))
+        stats = Stats(rcMean=float(rcSum) / len, rdMean=float(rdSum) / len, rcMedian=rent[int(len / 2)],
+                      rdMedian=deposit[int(len / 2)], rcSd=statistics.stdev(rent), rdSd=statistics.stdev(deposit))
         serializer = StatsSerializer(stats)
         return Response(serializer.data)
-        
+
+
 class Stats:
     def __init__(self, rcMean, rdMean, rcMedian, rdMedian, rcSd, rdSd):
         self.rcMean = rcMean
@@ -174,4 +167,3 @@ class Stats:
         self.rdMedian = rdMedian
         self.rcSd = rcSd
         self.rdSd = rdSd
-

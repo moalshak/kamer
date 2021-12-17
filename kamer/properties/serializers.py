@@ -9,6 +9,8 @@ class PropertySerializer(serializers.ModelSerializer):
         fields = ('externalId', 'areaSqm', 'city', 'coverImageUrl', 'furnish', 'latitude', 'longitude', 'postalCode',
                   'propertyType', 'rent', 'title', 'deposit', 'descriptionTranslated', 'gender', 'isRoomActive',
                   'pageDescription', 'pageTitle', 'pets', 'roommates')
+    #def update(self, instance, validated_data):
+
 
 
 class StatsSerializer(serializers.Serializer):
