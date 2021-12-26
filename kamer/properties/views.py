@@ -13,18 +13,26 @@ from rest_framework_csv.renderers import CSVRenderer
 from .models import Property
 from .serializers import PropertySerializer, StatsSerializer
 
-
-# Create your views here.
-
-@api_view(['GET'])
-def home(request):
-    properties = Property.objects.all()
-    serializer = PropertySerializer(properties, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['POST'])
+'''
+    dependent on the request type:
+    GET : returns all properties in database
+    POST: adds a property to the database
+'''
+@api_view(['GET', 'POST'])
 @renderer_classes((JSONRenderer, CSVRenderer))
+def properties(request):
+    if request.method == "GET":
+        properties = Property.objects.all()
+        serializer = PropertySerializer(properties, many=True)
+        return Response(serializer.data)
+    elif request.method == "POST":
+        return add_property(request)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+'''
+    adds a property to the database using the request.data
+'''
 def add_property(request):
     serializer = PropertySerializer(data=request.data)
     if serializer.is_valid():
@@ -33,6 +41,12 @@ def add_property(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+'''
+    using an (existent) externalId either:
+        returns the property (GET)
+        updates the property (PUT)
+        deletes the property (DELETE)
+'''
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((JSONRenderer, CSVRenderer))
 def property_by_id(request, externalId, format=None):
@@ -53,7 +67,10 @@ def property_by_id(request, externalId, format=None):
         p.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+'''
+    extracts the longitude & latitude from the url (query)
+    then calls the helper function 
+'''
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((JSONRenderer, CSVRenderer))
 def get_propertyByLocation(request, format=None):
@@ -62,7 +79,13 @@ def get_propertyByLocation(request, format=None):
         longitude = request.GET.get("longitude", '0')
         return locationHelper(latitude, longitude, request)
 
-
+'''
+    the helper function for the location
+    dependent on the request:
+        GET : returns a list of all properties that match the longitude and latitude
+        PUT : updates all the properties that match the longitude and latitude
+        DELETE : deletes all the properties that match the longitude and latitude
+'''
 def locationHelper(latitude, longitude, request):
     try:
         p = Property.objects.filter(latitude=latitude).filter(longitude=longitude)
@@ -86,7 +109,15 @@ def locationHelper(latitude, longitude, request):
         serializer = PropertySerializer(p, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+'''
+    given a city returns all properties that match the query parameters from the url
+    1. The order : Ascending or Descending
+    2. Rent price range: min, max or both
+    3. Pets: if pets are allowed
+    4. Area : min, max or both
+    5. Square Meter budget: max rent price per square meter maxPrice/maxArea
+    6. N : number of properties wanted to return Default is 10
+'''
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
 # todo nResults using pagination
@@ -130,7 +161,9 @@ def get_propertyByCityPreferences(request, city, format=None):
         serializer = PropertySerializer(p, many=True)
         return Response(serializer.data)
 
-
+'''
+    returns the stats of a given city
+'''
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
 def stats(request, city, format=None):
@@ -160,7 +193,9 @@ def stats(request, city, format=None):
         serializer = StatsSerializer(stats)
         return Response(serializer.data)
 
-
+'''
+    represents the stats needed for the city
+'''
 class Stats:
     def __init__(self, rcMean, rdMean, rcMedian, rdMedian, rcSd, rdSd):
         self.rcMean = rcMean
