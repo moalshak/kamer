@@ -9,12 +9,25 @@ servers:
 
 paths:
  
-  /properties/addProperty:
+  /properties/:
+    get:
+      tags:
+        - All properties
+      summary: lists all properties
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
     post: 
       tags:
         - Properties by Id
       operationId: postProperty
-      summary: Posts a property
+      summary: Adds a property
       requestBody:
         required: true
         content:
@@ -35,10 +48,10 @@ paths:
           $ref: '#/components/responses/ServerError'
      
         
-  /properties/{id}:
+  /properties/id/{externalId}:
   
     parameters:
-        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/externalId'
         - $ref: '#/components/parameters/contentType'
 
     get:
@@ -106,7 +119,7 @@ paths:
           $ref: '#/components/responses/ServerError'
 
 
-  /properties/location:
+  /properties/location/:
     parameters:
       - $ref: '#/components/parameters/contentType'
       - $ref: '#/components/parameters/longitude'
@@ -175,7 +188,7 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
 
-  /properties/{city}: 
+  /properties/city/{city}: 
     parameters:
       - $ref: '#/components/parameters/city'
       - $ref: '#/components/parameters/minRange'
@@ -216,7 +229,7 @@ paths:
 
 
 
-  /stats/{city}:
+  /properties/city/stats/{city}:
     parameters:
       - $ref: '#/components/parameters/city'
           
@@ -267,7 +280,7 @@ components:
       schema: 
         $ref: '#/components/schemas/city'
     
-    id:
+    externalId:
       in: path
       name: id
       required: true
