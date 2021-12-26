@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.http.response import HttpResponse
 from django.urls import path, include
+from django.shortcuts import render
 
 def home(request):
-    return HttpResponse('Go to /properties/')
+    return render(request, 'properties/home.html')
 
 ## Admin user : 
     # username: admin

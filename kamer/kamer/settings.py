@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # own added apps
-    # <folder>.apps.<Folder>Config
     'properties.apps.PropertiesConfig',
 
 ]
