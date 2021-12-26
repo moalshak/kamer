@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', views.properties, name='properties'),
-    path('<str:externalId>/', views.property_by_id, name="byId"),
+    path('id/<str:externalId>/', views.property_by_id, name="byId"),
     path('city/<str:city>/', views.get_propertyByCityPreferences, name="byCity"),
     path('location/', views.get_propertyByLocation, name="byLocation"),
     path('city/stats/<str:city>/', views.stats, name="getStats")
