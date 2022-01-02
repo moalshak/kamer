@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,8 +25,10 @@ SECRET_KEY = 'django-insecure--(0!h91cd*ln5i083zdojv85*+k&qc=o(kjcwu-a#(wh03s5x!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+# override the default django authorization
+AUTH_USER_MODEL = 'account.Account'
 
 # Application definition
 
@@ -39,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # own added apps
-    'properties.apps.PropertiesConfig',
+    'api.apps.PropertiesConfig',
+    'frontend',
+    'account',
 
 ]
 REST_FRAMEWORK = {
@@ -69,7 +73,7 @@ ROOT_URLCONF = 'kamer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

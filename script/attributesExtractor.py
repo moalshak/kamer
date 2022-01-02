@@ -2,8 +2,8 @@ import json
 import os
 from pathlib import Path
 
-pathOfProp = str(input("Enter folder that contains properties.json file (leave empty if same directory): "))
-pathOfProp += "properties.json"
+pathOfProp = str(input("Enter folder that contains api.json file (leave empty if same directory): "))
+pathOfProp += "api.json"
 
 f = open(pathOfProp, 'r')
 

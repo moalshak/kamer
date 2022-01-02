@@ -1,7 +1,7 @@
 openapi: '3.0.2'
 info:
   title: Team 13 API Design
-  description: API for properties
+  description: API for api
   version: 0.1.9
 
 servers:
@@ -12,8 +12,8 @@ paths:
   /properties/:
     get:
       tags:
-        - All properties
-      summary: lists all properties
+        - All api
+      summary: lists all api
       responses:
         '200':
           description: OK
@@ -176,8 +176,8 @@ paths:
       tags:
         - Properties by Location
       operationId: deletePropertyByLocation
-      summary: delete properties by latitude and longitude
-      description: deletes all properties in the given latitude and longitude
+      summary: delete api by latitude and longitude
+      description: deletes all api in the given latitude and longitude
       responses:
         '200':
           description: OK
@@ -204,8 +204,8 @@ paths:
       tags:
         - Find Properties by city and filter
       operationId: getPropertiesByCityByFilter
-      summary: get properties in city by filters
-      description: returns list of properties in a given city with a range of filters
+      summary: get api in city by filters
+      description: returns list of api in a given city with a range of filters
       responses:
         '200':  
           description: OK
@@ -332,7 +332,7 @@ components:
       schema:
         type: integer
         default: 10
-      description: the number of properties you want to see
+      description: the number of api you want to see
       example: 4
       
     ascOrDesc:
@@ -354,7 +354,7 @@ components:
       required: false
       schema:
         type: integer
-      description: the price per square meter of properties in the city
+      description: the price per square meter of api in the city
       example: 25
 
     budget:
@@ -363,7 +363,7 @@ components:
       required: false
       schema:
         type: integer
-      description: the budget for the properties in the area
+      description: the budget for the api in the area
       example: 25000
     
     longitude:
