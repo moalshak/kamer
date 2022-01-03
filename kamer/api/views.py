@@ -6,7 +6,7 @@ from django.db.models import Max
 from django.shortcuts import render
 from django.template.defaultfilters import length
 from rest_framework import status
-from rest_framework.authentication import BasicAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, renderer_classes, permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -32,7 +32,7 @@ def api_home_page(request):
 
 @api_view(['GET', 'POST'])
 @renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 def properties(request):
     if request.method == "GET":
         properties = Property.objects.all()
@@ -71,7 +71,7 @@ def add_property(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 def property_by_id(request, externalId, format=None):
     try:
         p = Property.objects.get(externalId=externalId)
@@ -106,7 +106,7 @@ def property_by_id(request, externalId, format=None):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 def get_propertyByLocation(request, format=None):
     if request.method == 'GET' or request.method == 'PUT' or request.method == 'DELETE':
         latitude = request.GET.get("latitude", '0')
@@ -167,8 +167,7 @@ def locationHelper(latitude, longitude, request):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated, ))
-# todo nResults using pagination
+@permission_classes((IsAuthenticated,))
 def get_propertyByCityPreferences(request, city, format=None):
     if request.method == 'GET':
 
@@ -198,7 +197,7 @@ def get_propertyByCityPreferences(request, city, format=None):
         # Sqaure meter budget
         sqmBudget = D(request.GET.get('sqmBudget', defaultMaxPrice / defaultMaxArea))
 
-        N = D(request.GET.get('N', 10))
+        # N = D(request.GET.get('N', 10))
 
         query = f"SELECT * FROM api_property    " \
                 f"WHERE city LIKE '{city}' " \
@@ -207,7 +206,7 @@ def get_propertyByCityPreferences(request, city, format=None):
                 f"AND pets LIKE '{pets_choice}' " \
                 f"AND rent / areaSqm <= {sqmBudget} " \
                 f" ORDER BY {orderBY} {ascOrDesc} " \
-                f"LIMIT {N};"
+                # f"LIMIT {N};"
 
         try:
             p = Property.objects.raw(query)
@@ -224,7 +223,7 @@ def get_propertyByCityPreferences(request, city, format=None):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 def stats(request, city, format=None):
     if request.method == 'GET':
         p = Property.objects.filter(city=city)
@@ -268,10 +267,18 @@ class Stats:
         self.rdSd = rdSd
 
 
-## pagination
+'''
+    A Class based view to view the properties in pages
+'''
+
+
 class PropertiesListView(ListAPIView):
+    ##################################################
+    # DO NOT MODIFY THIS HAS TO BE EXACTLY LIKE THIS #
+    ##################################################
     queryset = Property.objects.all()
-    serializer_class = PropertySerializer(queryset, many=True)
-    authentication_classes = [BasicAuthentication, ]
-    permission_classes = [IsAuthenticated, ]
+    serializer_class = PropertySerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
     pagination_class = PageNumberPagination
+    ####################################################
