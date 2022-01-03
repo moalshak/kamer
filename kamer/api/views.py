@@ -7,10 +7,10 @@ from django.shortcuts import render
 from django.template.defaultfilters import length
 from rest_framework import status
 from rest_framework.authentication import BasicAuthentication
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, renderer_classes, permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework_csv.renderers import CSVRenderer
@@ -32,6 +32,7 @@ def api_home_page(request):
 
 @api_view(['GET', 'POST'])
 @renderer_classes((JSONRenderer, CSVRenderer))
+@permission_classes((IsAuthenticated, ))
 def properties(request):
     if request.method == "GET":
         properties = Property.objects.all()
@@ -49,10 +50,14 @@ def properties(request):
 
 
 def add_property(request):
+    # TODO: add an owner field. Then set that field to the user/requester then uncomment below
+    # property = Property(owner=request.user)
+    # serializer = PropertySerializer(property, data=request.data)
     serializer = PropertySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -66,11 +71,19 @@ def add_property(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((JSONRenderer, CSVRenderer))
+@permission_classes((IsAuthenticated, ))
 def property_by_id(request, externalId, format=None):
     try:
         p = Property.objects.get(externalId=externalId)
     except Property.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    # TODO: only allow an the PUT if the renter of the this property is the requester (by adding in the database
+    #  an owner field and populating it) then uncomment below
+    '''
+        requester = request.user
+        if request.method != 'GET' and p.owner != requester:
+            return Response({'Response':"You do not have permission to edit that"})
+    '''
     if request.method == 'GET':
         serializer = PropertySerializer(p)
         return Response(serializer.data)
@@ -93,6 +106,7 @@ def property_by_id(request, externalId, format=None):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((JSONRenderer, CSVRenderer))
+@permission_classes((IsAuthenticated, ))
 def get_propertyByLocation(request, format=None):
     if request.method == 'GET' or request.method == 'PUT' or request.method == 'DELETE':
         latitude = request.GET.get("latitude", '0')
@@ -110,6 +124,13 @@ def get_propertyByLocation(request, format=None):
 
 
 def locationHelper(latitude, longitude, request):
+    # TODO: only allow an the PUT if the renter of the this property is the requester (by adding in the database
+    #  an owner field and populating it) then uncomment below
+    '''
+        requester = request.user
+        if request.method != 'GET' and p.owner != requester:
+            return Response({'Response':"You do not have permission to edit that"})
+    '''
     try:
         p = Property.objects.filter(latitude=latitude).filter(longitude=longitude)
     except Property.DoesNotExist:
@@ -146,6 +167,7 @@ def locationHelper(latitude, longitude, request):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
+@permission_classes((IsAuthenticated, ))
 # todo nResults using pagination
 def get_propertyByCityPreferences(request, city, format=None):
     if request.method == 'GET':
@@ -202,6 +224,7 @@ def get_propertyByCityPreferences(request, city, format=None):
 
 @api_view(['GET'])
 @renderer_classes((JSONRenderer, CSVRenderer))
+@permission_classes((IsAuthenticated, ))
 def stats(request, city, format=None):
     if request.method == 'GET':
         p = Property.objects.filter(city=city)
@@ -250,5 +273,5 @@ class PropertiesListView(ListAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer(queryset, many=True)
     authentication_classes = [BasicAuthentication, ]
-    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    permission_classes = [IsAuthenticated, ]
     pagination_class = PageNumberPagination
