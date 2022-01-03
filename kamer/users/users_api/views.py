@@ -3,7 +3,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework_csv.renderers import CSVRenderer
-
+from rest_framework.authtoken.models import Token
 from .serializers import RegistrationSerializer
 
 
@@ -28,6 +28,8 @@ def registration_view(request):
             data['username'] = account.username
             data['first_name'] = account.first_name
             data['last_name'] = account.last_name
+            token = Token.objects.get(user=account).key
+            data['token'] = token
         else:
             data = serializer.errors
 
