@@ -5,7 +5,7 @@ from . import views
 
 # localhost/api/*
 urlpatterns = [
-    path('', views.api_home_page, name='home'),
+    path('', views.api_home_page, name='api'),
     path('all/', views.PropertiesListView.as_view(), name="all"),
     path('id/<str:externalId>/', views.property_by_id, name="byId"),
     path('city/<str:city>/', views.get_propertyByCityPreferences, name="byCity"),
