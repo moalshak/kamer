@@ -155,6 +155,9 @@ def get_propertyByCityPreferences(request, city, format=None):
 
         # Price Range
         defaultMaxPrice = Property.objects.aggregate(Max('rent'))['rent__max']
+        # needed when database is empty
+        if defaultMaxPrice is None:
+            defaultMaxPrice = 1000
         minPrice = D(request.GET.get('minPrice', 0))
         maxPrice = D(request.GET.get('maxPrice', defaultMaxPrice))
 
@@ -163,6 +166,10 @@ def get_propertyByCityPreferences(request, city, format=None):
 
         # Area
         defaultMaxArea = Property.objects.aggregate(Max('areaSqm'))['areaSqm__max']
+        # needed when database is empty
+        if defaultMaxArea is None:
+            defaultMaxArea = 1000
+
         minArea = int(request.GET.get('minArea', 0))
         maxArea = int(request.GET.get('maxArea', defaultMaxArea))
 
@@ -171,7 +178,7 @@ def get_propertyByCityPreferences(request, city, format=None):
 
         N = D(request.GET.get('N', 10))
 
-        query = f"SELECT * FROM properties_property " \
+        query = f"SELECT * FROM api_property    " \
                 f"WHERE city LIKE '{city}' " \
                 f"AND areaSqm BETWEEN {minArea} AND {maxArea} " \
                 f"AND rent BETWEEN {minPrice} AND {maxPrice} " \

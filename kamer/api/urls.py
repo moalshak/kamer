@@ -1,11 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import views
 
+
 # localhost/api/*
 urlpatterns = [
     path('', views.api_home_page, name='api'),
+    path('register/', include('users.users_api.urls')),
     path('all/', views.PropertiesListView.as_view(), name="all"),
     path('id/<str:externalId>/', views.property_by_id, name="byId"),
     path('city/<str:city>/', views.get_propertyByCityPreferences, name="byCity"),
