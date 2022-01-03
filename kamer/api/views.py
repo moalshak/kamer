@@ -3,13 +3,17 @@ import statistics
 from decimal import Decimal as D
 
 from django.db.models import Max
+from django.shortcuts import render
 from django.template.defaultfilters import length
 from rest_framework import status
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework_csv.renderers import CSVRenderer
-from django.shortcuts import render
 
 from .models import Property
 from .serializers import PropertySerializer, StatsSerializer
@@ -21,7 +25,7 @@ def api_home_page(request):
 
 '''
     dependent on the request type:
-    GET : returns all api in database
+    GET : returns all properties in database
     POST: adds a property to the database
 '''
 
@@ -99,9 +103,9 @@ def get_propertyByLocation(request, format=None):
 '''
     the helper function for the location
     dependent on the request:
-        GET : returns a list of all api that match the longitude and latitude
-        PUT : updates all the api that match the longitude and latitude
-        DELETE : deletes all the api that match the longitude and latitude
+        GET : returns a list of all properties that match the longitude and latitude
+        PUT : updates all the properties that match the longitude and latitude
+        DELETE : deletes all the properties that match the longitude and latitude
 '''
 
 
@@ -130,13 +134,13 @@ def locationHelper(latitude, longitude, request):
 
 
 '''
-    given a city returns all api that match the query parameters from the url
+    given a city returns all properties that match the query parameters from the url
     1. The order : Ascending or Descending
     2. Rent price range: min, max or both
     3. Pets: if pets are allowed
     4. Area : min, max or both
     5. Square Meter budget: max rent price per square meter maxPrice/maxArea
-    6. N : number of api wanted to return Default is 10
+    6. N : number of properties wanted to return Default is 10
 '''
 
 
@@ -232,3 +236,12 @@ class Stats:
         self.rdMedian = rdMedian
         self.rcSd = rcSd
         self.rdSd = rdSd
+
+
+## pagination
+class PropertiesListView(ListAPIView):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer(queryset, many=True)
+    authentication_classes = [BasicAuthentication, ]
+    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    pagination_class = PageNumberPagination

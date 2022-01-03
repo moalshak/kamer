@@ -16,13 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-## Admin user :
-# username: admin
-# email: admin@email.com
-# password: admin
+# right now there is one admin user...
+# TODO: add your own admin account by: `python manage.py createsuperuser`
+# email: mo@gmail.com
+# password: 123
 
 urlpatterns = [
+    # localhost/admin/
     path('admin/', admin.site.urls),
+    # localhost/log/<users.urls>
+    path('log/', include('users.urls')),
+    # localhost/<frontend.urls>
     path('', include('frontend.urls')),
-    path('api/', include('api.urls'))
+    # localhost/<api.urls>
+    path('api/', include('api.urls')),
 ]
