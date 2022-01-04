@@ -1,5 +1,6 @@
 # Create your views here.
 import statistics
+import csv
 from decimal import Decimal as D
 
 from django.db.models import Max
@@ -7,11 +8,11 @@ from django.shortcuts import render
 from django.template.defaultfilters import length
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.decorators import api_view, renderer_classes, permission_classes
+from rest_framework.decorators import api_view, renderer_classes, permission_classes, authentication_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.response import Response
 from rest_framework_csv.renderers import CSVRenderer
 
@@ -24,24 +25,26 @@ def api_home_page(request):
 
 
 '''
+    A Class based view to view the properties in pages
     dependent on the request type:
     GET : returns all properties in database
     POST: adds a property to the database
 '''
 
 
-@api_view(['GET', 'POST'])
-@renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated,))
-def properties(request):
-    if request.method == "GET":
-        properties = Property.objects.all()
-        serializer = PropertySerializer(properties, many=True)
-        return Response(serializer.data)
-    elif request.method == "POST":
+class PropertiesListView(ListAPIView):
+    ##################################################
+    # DO NOT MODIFY THIS HAS TO BE EXACTLY LIKE THIS #
+    ##################################################
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+    permission_classes = (IsAuthenticated,)
+    pagination_class = PageNumberPagination
+
+    def post(self, request, *args, **kwargs):
         return add_property(request)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    ####################################################
 
 
 '''
@@ -70,8 +73,9 @@ def add_property(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated,))
+@renderer_classes((BrowsableAPIRenderer, ))
+@authentication_classes((SessionAuthentication, ))
+@permission_classes((IsAuthenticated, ))
 def property_by_id(request, externalId, format=None):
     try:
         p = Property.objects.get(externalId=externalId)
@@ -105,8 +109,9 @@ def property_by_id(request, externalId, format=None):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated,))
+@renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
+@authentication_classes((SessionAuthentication, ))
+@permission_classes((IsAuthenticated, ))
 def get_propertyByLocation(request, format=None):
     if request.method == 'GET' or request.method == 'PUT' or request.method == 'DELETE':
         latitude = request.GET.get("latitude", '0')
@@ -170,8 +175,9 @@ def locationHelper(latitude, longitude, request):
 
 
 @api_view(['GET'])
-@renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated,))
+@renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
+@authentication_classes((SessionAuthentication, ))
+@permission_classes((IsAuthenticated, ))
 def stats(request, city, format=None):
     if request.method == 'GET':
         p = Property.objects.filter(city=city)
@@ -303,21 +309,4 @@ class CityPrefListView(ListAPIView):
                 f" ORDER BY {orderBY} {ascOrDesc} "
 
         return Property.objects.raw(query)
-    ####################################################
-
-
-'''
-    A Class based view to view the properties in pages
-'''
-
-
-class PropertiesListView(ListAPIView):
-    ##################################################
-    # DO NOT MODIFY THIS HAS TO BE EXACTLY LIKE THIS #
-    ##################################################
-    queryset = Property.objects.all()
-    serializer_class = PropertySerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    pagination_class = PageNumberPagination
     ####################################################

@@ -11,14 +11,14 @@
 
     <ul>
         <li>
-            /properties/
+            api/all/
             <ul>
                 <li><b>GET</b> : returns all properties in the database</li>
                 <li><b>POST</b>: adds a property to the database</li>
             </ul>
         </li>
         <li>
-            /properties/id/{externalId}
+            /all/id/{externalId}
             <ul>
                 <li><b>GET</b>:  returns the property</li>
                 <li><b>PUT</b>: updates the property </li>
@@ -26,7 +26,7 @@
             </ul>
         </li>
         <li>
-            /properties/city/{cityName} & {orderBY} & {ascOrDesc} & {minPrice} & {maxPrice} & {pets} & {areaSqm} & {minArea} & {maxArea} & {sqmBudget}
+            api/city/?{cityName} & {orderBY} & {ascOrDesc} & {minPrice} & {maxPrice} & {pets} & {areaSqm} & {minArea} & {maxArea} & {sqmBudget}
             <ul>
                 <b>GET</b> : given a city returns all properties that match the query parameters from the url
                 <li> Order by : order by this attribute example : rent</li>
@@ -39,7 +39,7 @@
             </ul>
         </li>
         <li>
-            /properties/location/{longitude} & {latitude}
+            api/location/?{longitude} & {latitude}
             <ul>
                 <li><b>GET</b> : returns a list of all properties that match the longitude and latitude </li>
                 <li><b>PUT</b> : updates all the properties that match the longitude and latitude </li>
@@ -47,7 +47,7 @@
             </ul>
         </li>
         <li>
-            /properties/city/stats/{cityName}
+            api/city/stats/{cityName}
             <ul>
                 <li><b>GET</b>: returns the stats of a given city</li>
             </ul>
