@@ -10,7 +10,7 @@ urlpatterns = [
     path('log/', include('users.users_api.urls')),
     path('all/', views.PropertiesListView.as_view(), name="list"),
     path('id/<str:externalId>/', views.property_by_id, name="byId"),
-    path('city/<str:city>/', views.get_propertyByCityPreferences, name="byCity"),
+    path('city/<str:city>/', views.CityPrefListView.as_view(), name="byCity"),
     path('location/', views.get_propertyByLocation, name="byLocation"),
     path('city/stats/<str:city>/', views.stats, name="getStats")
 ]

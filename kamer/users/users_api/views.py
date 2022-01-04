@@ -1,19 +1,21 @@
-from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, renderer_classes, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, renderer_classes
 from rest_framework_csv.renderers import CSVRenderer
-from rest_framework.authtoken.models import Token
-from .serializers import RegistrationSerializer
 
+from .serializers import RegistrationSerializer
 
 '''
     to register a new user using the api
 '''
 
 
-@api_view(['POST'], )
+@api_view(['POST', 'GET'], )
 @renderer_classes((JSONRenderer, CSVRenderer))
+@permission_classes((AllowAny,))
 def registration_view(request):
     if request.method == 'POST':
         # serialize the incoming data using the RegistrationSerializer
@@ -35,4 +37,4 @@ def registration_view(request):
 
         return Response(data)
     else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({})

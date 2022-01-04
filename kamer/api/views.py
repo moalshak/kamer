@@ -6,7 +6,7 @@ from django.db.models import Max
 from django.shortcuts import render
 from django.template.defaultfilters import length
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, renderer_classes, permission_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -164,58 +164,6 @@ def locationHelper(latitude, longitude, request):
     6. N : number of properties wanted to return Default is 10
 '''
 
-
-@api_view(['GET'])
-@renderer_classes((JSONRenderer, CSVRenderer))
-@permission_classes((IsAuthenticated,))
-def get_propertyByCityPreferences(request, city, format=None):
-    if request.method == 'GET':
-
-        orderBY = request.GET.get('orderBY', 'rent')
-        ascOrDesc = request.GET.get('ascOrDesc', 'ASC')
-
-        # Price Range
-        defaultMaxPrice = Property.objects.aggregate(Max('rent'))['rent__max']
-        # needed when database is empty
-        if defaultMaxPrice is None:
-            defaultMaxPrice = 1000
-        minPrice = D(request.GET.get('minPrice', 0))
-        maxPrice = D(request.GET.get('maxPrice', defaultMaxPrice))
-
-        # Pets
-        pets_choice = request.GET.get('pets', '%')
-
-        # Area
-        defaultMaxArea = Property.objects.aggregate(Max('areaSqm'))['areaSqm__max']
-        # needed when database is empty
-        if defaultMaxArea is None:
-            defaultMaxArea = 1000
-
-        minArea = int(request.GET.get('minArea', 0))
-        maxArea = int(request.GET.get('maxArea', defaultMaxArea))
-
-        # Sqaure meter budget
-        sqmBudget = D(request.GET.get('sqmBudget', defaultMaxPrice / defaultMaxArea))
-
-        # N = D(request.GET.get('N', 10))
-
-        query = f"SELECT * FROM api_property    " \
-                f"WHERE city LIKE '{city}' " \
-                f"AND areaSqm BETWEEN {minArea} AND {maxArea} " \
-                f"AND rent BETWEEN {minPrice} AND {maxPrice} " \
-                f"AND pets LIKE '{pets_choice}' " \
-                f"AND rent / areaSqm <= {sqmBudget} " \
-                f" ORDER BY {orderBY} {ascOrDesc} " \
-                # f"LIMIT {N};"
-
-        try:
-            p = Property.objects.raw(query)
-        except Property.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = PropertySerializer(p, many=True)
-        return Response(serializer.data)
-
-
 '''
     returns the stats of a given city
 '''
@@ -265,6 +213,97 @@ class Stats:
         self.rdMedian = rdMedian
         self.rcSd = rcSd
         self.rdSd = rdSd
+
+
+'''
+    Pagination view for the properties from /city/
+'''
+
+
+class CityPrefListView(ListAPIView):
+    ##################################################
+    # DO NOT MODIFY THIS HAS TO BE EXACTLY LIKE THIS #
+    ##################################################
+    serializer_class = PropertySerializer
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+    permission_classes = (IsAuthenticated,)
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        # each parameter has to have an except since it can also
+        # not be given in the url aka KeyError.
+
+        city = self.kwargs['city']
+        # Order by :: Default : rent
+        try:
+            orderBY = self.kwargs['orderBy']
+        except KeyError:
+            orderBY = 'rent'
+
+        # Ascending or Descending :: Default : Ascending
+        try:
+            ascOrDesc = self.kwargs['ascOrDesc']
+        except KeyError:
+            ascOrDesc = 'ASC'
+
+        # Price Range :: Default : 1000
+        try:
+            defaultMaxPrice = Property.objects.aggregate(Max('rent'))['rent__max']
+        except KeyError:
+            defaultMaxPrice = 1000
+
+        # Min Price :: Default 0
+        try:
+            minPrice = D(self.kwargs['minPrice'])
+        except KeyError:
+            minPrice = 0
+
+        # Max Price :: Default : defaultMaxPrice
+        try:
+            maxPrice = D(self.kwargs['maxPrice'])
+        except KeyError:
+            maxPrice = defaultMaxPrice
+
+        # Pets :: Default : %
+        try:
+            pets_choice = self.kwargs['pets']
+        except KeyError:
+            pets_choice = '%'
+
+        # Area :: Default : 1000
+        try:
+            defaultMaxArea = Property.objects.aggregate(Max('areaSqm'))['areaSqm__max']
+        except KeyError:
+            defaultMaxArea = 1000
+
+        # min area :: Default : 0
+        try:
+            minArea = int(self.kwargs['minArea'])
+        except KeyError:
+            minArea = 0
+
+        # min area :: Default : defaultMaxArea
+        try:
+            maxArea = int(self.kwargs['maxArea'])
+        except KeyError:
+            maxArea = defaultMaxArea
+
+        # sqmBudget :: Default : defaultMaxPrice / defaultMaxArea
+        try:
+            sqmBudget = D(self.kwargs['sqmBudget'])
+        except KeyError:
+            sqmBudget = defaultMaxPrice / defaultMaxArea
+
+        query = f"SELECT * FROM api_property    " \
+                f"WHERE city LIKE '{city}' " \
+                f"AND areaSqm BETWEEN {minArea} AND {maxArea} " \
+                f"AND rent BETWEEN {minPrice} AND {maxPrice} " \
+                f"AND pets LIKE '{pets_choice}' " \
+                f"AND rent / areaSqm <= {sqmBudget} " \
+                f" ORDER BY {orderBY} {ascOrDesc} "
+
+        return Property.objects.raw(query)
+    ####################################################
 
 
 '''
