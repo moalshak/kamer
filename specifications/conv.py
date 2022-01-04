@@ -3,7 +3,7 @@ import sqlite3
 from sqlite3.dbapi2 import Error
 
 try:
-    db = sqlite3.connect('/home/salo/2021-Group13/specifications/db.sqlite3')
+    db = sqlite3.connect('/home/salo/uni/2021-Group13/specifications/db.sqlite3')
 except Error as e:
     print(e.message)
 
@@ -13,7 +13,7 @@ for c in traffic:
 
 # columns = ['externalId', 'areaSqm', 'city', 'coverImageUrl', 'furnish', 'latitude', 'longitude', 'postalCode', 'propertyType', 'rent', 'title', 'deposit', 'descriptionTranslated', 'gender', 'isRoomActive', 'pageDescription', 'pageTitle', 'pets', 'roommates']
 
-query = "insert into properties_property ({0}) values (?{1})"
+query = "insert into api_property ({0}) values (?{1})"
 query = query.format(",".join(columns), ",?" * (len(columns)-1))
 
 i = 0
