@@ -73,8 +73,8 @@ def add_property(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@renderer_classes((BrowsableAPIRenderer, ))
-@authentication_classes((SessionAuthentication, ))
+@renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
+@authentication_classes((SessionAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated, ))
 def property_by_id(request, externalId, format=None):
     try:
@@ -110,7 +110,7 @@ def property_by_id(request, externalId, format=None):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
-@authentication_classes((SessionAuthentication, ))
+@authentication_classes((SessionAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated, ))
 def get_propertyByLocation(request, format=None):
     if request.method == 'GET' or request.method == 'PUT' or request.method == 'DELETE':
@@ -176,7 +176,7 @@ def locationHelper(latitude, longitude, request):
 
 @api_view(['GET'])
 @renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
-@authentication_classes((SessionAuthentication, ))
+@authentication_classes((SessionAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated, ))
 def stats(request, city, format=None):
     if request.method == 'GET':
