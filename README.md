@@ -5,4 +5,5 @@
 # How To Install
 
 pip install -r requierments.txt
+
 npm install
