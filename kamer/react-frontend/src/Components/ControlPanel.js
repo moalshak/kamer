@@ -1,10 +1,12 @@
 import React from "react";
-import GetByIdBtn from "./GetByIdBtn";
+import Button from "./Button";
 
 function ControlPanel() {
     return (
         <div className="controlPanel">
-            <GetByIdBtn/>
+            <Button text="ID"/>
+            <Button text="Longitude & Latitude"/>
+            <Button text="Preference"/>
         </div>
     )
 }

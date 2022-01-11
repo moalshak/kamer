@@ -1,5 +1,5 @@
-import {useState, useEffect} from "react";
 import axios from 'axios';
+import { useEffect, useState } from "react";
 
 // const Property = () => {
 //     return (
@@ -10,7 +10,7 @@ import axios from 'axios';
 // }
 
 function Property() {
-    const [properties, setProperties] = useState(null)
+    const [properties, setProperties] = useState()
     axios.defaults.headers.common['Authorization'] = 'Token ff27fca94c0c9461da6e327389e7b633224cd2fa'
 
     useEffect(() => {
@@ -18,14 +18,13 @@ function Property() {
     }, [])
 
     function getProperties() {
-        let webApiUrl = 'https://www.team13.xyz/api/all/?format=json';
-        let token = 'ff27fca94c0c9461da6e327389e7b633224cd2fa';
-        // axios.get(webApiUrl, { headers: { Authorization: `Bearer ${token}`}});
-
-        axios.get('https://www.team13.xyz/api/all/?format=json').then((response) => {
-            const data = response.data.['results']
-            setProperties(data)
-            console.log(data[0])
+        let request_url = 'https://www.team13.xyz/api/all/?format=json';
+    
+        axios.get(request_url)
+        .then((response) => {
+            const data = response.data.results;
+            console.log(data)
+            // setProperties(data)
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);
