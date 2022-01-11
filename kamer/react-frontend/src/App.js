@@ -1,7 +1,7 @@
-import React from "react";
-import ControlPanel from './Components/ControlPanel'
-import Property from './Components/Property';
 import axios from "axios";
+import React from "react";
+import ControlPanel from './Components/ControlPanel';
+import Property from './Components/Property';
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
 
