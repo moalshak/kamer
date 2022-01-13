@@ -15,7 +15,7 @@ function Button({ text, form, onButtonClick }) {
 // through this we define what the type of the parameters is for the functions
 Button.propTypes = {
     text: PropTypes.string.isRequired,
-    form: PropTypes.string.isRequired,
+    form: PropTypes.string,
     onButtonClick: PropTypes.func.isRequired,
 }
 

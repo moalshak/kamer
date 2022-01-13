@@ -3,8 +3,8 @@ import React from "react";
 import ControlPanel from './Components/ControlPanel';
 import Property from './Components/Property';
 import {useState} from "react";
-
 import InputPanel from './Components/InputPanel';
+
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
 
@@ -14,6 +14,7 @@ function App() {
 
     //properties state
     const [properties, setProperties] = useState([])
+    const [nav, setNav] = useState(true);
 
     //show forms state
     const [idForm, setIdForm] = useState(false)
@@ -29,6 +30,7 @@ function App() {
             let a = []
             a.push(result)
             setProperties(a)
+            setNav(false);
         }).catch((error) => {
             if (error.response) {
                 console.log(error.response);
@@ -38,9 +40,13 @@ function App() {
     })
     }
 
-    const onControlPanelClick = (form) => {
-        setShowForm(form);
-        console.log(form);
+    const onControlPanelClick = async (form) => {
+        if (form === undefined) {
+            //
+        } else {
+            setShowForm(form);
+            console.log(form);
+        }
     }
 
 
@@ -49,7 +55,7 @@ function App() {
             <ControlPanel 
             onButtonClick={onControlPanelClick}
                 />
-            <Property properties={properties} setProperties={setProperties}/>
+            <Property properties={properties} setProperties={setProperties} nav={nav} setNav={setNav}/>
             <InputPanel
             formToShow={showForm}
             onIdGet={getPropertyById}

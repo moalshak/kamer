@@ -2,14 +2,13 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import MapBuilder from './MapBuilder';
 
-
 /**
  * Calls the API through a get method
  * 
  * @returns a list of a list fetched from the API at a certain page
  */
 
-function Property ({ properties, setProperties}) {
+function Property ({ properties, setProperties, nav, setNav}) {
     /* state for loading : if the api call is still getting processed */
     const [loading, setLoading] = useState(true);
     
@@ -21,12 +20,11 @@ function Property ({ properties, setProperties}) {
     /* state for the current page number the user is on */
     const [curPage, setCurPage] = useState(1);
 
-    const [mProp, setMProp] = useState(1);
+
 
     // `getProperties` will "watch" the `currUrl` and update whenever it (currUrl) changes
     useEffect(() => {
-        getProperties()
-        setMProp(2);
+        getProperties();
     }, [currUrl])
 
     /**
@@ -39,9 +37,9 @@ function Property ({ properties, setProperties}) {
             const prev = await response.data.previous;
             setPrevUrl(prev);
             setNextUrl(next);
-            
+            setNav(true);
             const data = await response.data.results;
-            setProperties(data); 
+            setProperties(data);
             setLoading(false); // data is fetched no longer loading
         } catch(error) {
             console.log(error);
@@ -84,22 +82,23 @@ function Property ({ properties, setProperties}) {
         }   
     }
 
+
     return (
         <div className="container">
 
             <h3>DATA</h3>
-            
-            <div className="nav">
+
+            {nav ?             <div className="nav">
                 <small>Current Page: {getPageNumber('current')} </small>
-                <br></br>
+                <br/>
                 <small>Next Page: {getPageNumber('next')} </small>
-                <br></br>
+                <br/>
                 <small>Previous Page: {getPageNumber('prev')} </small>
-                    <div className="NextPrevBtn"> 
-                        <button onClick={prevPage}>Previous Page</button>
-                        <button onClick={nextPage}>Next Page</button>
-                    </div>
-            </div>
+                <div className="NextPrevBtn">
+                    <button onClick={prevPage}>Previous Page</button>
+                    <button onClick={nextPage}>Next Page</button>
+                </div>
+            </div> : null}
             
             {loading ? <b>"loading.."</b> : null} {/* if loading view loading */}
             <ul>
