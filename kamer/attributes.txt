@@ -1,21 +1,20 @@
-_id
 externalId
-<li>areaSqm: {prop.areaSqm} </li>
-<li>city: {prop.city} </li>
-<li>coverImageUrl: {prop.coverImageUrl} </li>
-<li>furnish: {prop.furnish} </li>
-<li>latitude: {prop.latitude} </li>
-<li>longitude: {prop.longitude} </li>
-<li>postalCode: {prop.postalCode} </li>
-<li>propertyType: {prop.propertyType} </li>
-<li>rent: {prop.rent} </li>
-<li>title: {prop.title} </li>
-<li>additionalCost: {prop.additionalCost} </li>
-<li>deposit: {prop.deposit} </li>
-<li>descriptionTranslated: {prop.descriptionTranslated} </li>
-<li>gender: {prop.gender} </li>
-<li>isRoomActive: {prop.isRoomActive} </li>
-<li>pageDescription: {prop.pageDescription} </li>
-<li>pageTitle: {prop.pageTitle} </li>
-<li>pets: {prop.pets} </li>
-<li>roommates: {prop.roommates} </li>
+areaSqm
+city
+coverImageUrl
+furnish
+latitude
+longitude
+postalCode
+propertyType
+rent
+title
+additionalCost
+deposit
+descriptionTranslated
+gender
+isRoomActive
+pageDescription
+pageTitle
+pets
+roommates

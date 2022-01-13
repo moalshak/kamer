@@ -1,24 +1,32 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import MapBuilder from './MapBuilder';
+
 
 /**
  * Calls the API through a get method
  * 
  * @returns a list of a list fetched from the API at a certain page
  */
-function Property () {
+
+function Property ({ properties, setProperties}) {
     /* state for loading : if the api call is still getting processed */
     const [loading, setLoading] = useState(true);
-    /* state properties */
-    const [properties, setProperties] = useState([])
+    
     /* state for the url */
     const [currUrl, setCurrUrl] = useState('https://www.team13.xyz/api/all/?format=json&page=1')
     const [nextUrl, setNextUrl] = useState(null)
     const [prevUrl, setPrevUrl] = useState(null)
     
-    // `getProperties` will "watch" the `currUrl` and update whenever it (currUrl) changed
+    /* state for the current page number the user is on */
+    const [curPage, setCurPage] = useState(1);
+
+    const [mProp, setMProp] = useState(1);
+
+    // `getProperties` will "watch" the `currUrl` and update whenever it (currUrl) changes
     useEffect(() => {
         getProperties()
+        setMProp(2);
     }, [currUrl])
 
     /**
@@ -46,33 +54,58 @@ function Property () {
     function nextPage() {
         if (nextUrl != null) {
             setCurrUrl(nextUrl);
+            setCurPage((curPage) => curPage + 1);
         }
     }
     function prevPage() {
         if (prevUrl != null) {
             setCurrUrl(prevUrl);
+            setCurPage((curPage) => curPage - 1);
         }
     }
     
+    /**
+     * Retrieves the page number from the url
+     */
+    function getPageNumber(place) {
+        switch (place) {
+            case 'next':
+                return curPage + 1;
+            case 'current':
+                return curPage;
+            case 'prev':
+                if (curPage - 1  > 0) {
+                    return curPage - 1;
+                } else {
+                    return null;
+                }
+            default:
+                return curPage;
+        }   
+    }
+
     return (
-        <div className="property">
+        <div className="container">
 
             <h3>DATA</h3>
-            <small>Current Page:{currUrl}</small>
-            <small>Next Page:{nextUrl}</small>
-            <small>prev Page:{prevUrl}</small>
+            
+            <div className="nav">
+                <small>Current Page: {getPageNumber('current')} </small>
+                <br></br>
+                <small>Next Page: {getPageNumber('next')} </small>
+                <br></br>
+                <small>Previous Page: {getPageNumber('prev')} </small>
+                    <div className="NextPrevBtn"> 
+                        <button onClick={prevPage}>Previous Page</button>
+                        <button onClick={nextPage}>Next Page</button>
+                    </div>
+            </div>
+            
             {loading ? <b>"loading.."</b> : null} {/* if loading view loading */}
-            {!loading ?
-                <div className="NextPrevBtn"> 
-                    <button onClick={prevPage}>Previous Page</button>
-                    <button onClick={nextPage}>Next Page</button>
-                </div>
-            : null
-            }
             <ul>
                 {properties.map((prop) => {
                     return (
-                    <div>
+                    <div className='propDiv'>
                         <li key={prop.externalId}><h2>{prop.externalId}</h2></li>
                         <ul>
                         <li><h3>{prop.title}</h3></li>
@@ -94,6 +127,7 @@ function Property () {
                         <li>PageTitle: {prop.pageTitle} </li>
                         <li>Pets: {prop.pets} </li>
                         <li>Roommates: {prop.roommates} </li>
+                        <MapBuilder lng = {prop.longitude} lat={prop.latitude}/>
                         </ul>
                     </div>
                     );
@@ -103,5 +137,6 @@ function Property () {
     )
 
 }
+
 
 export default Property
