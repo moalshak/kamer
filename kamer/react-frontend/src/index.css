@@ -29,6 +29,30 @@ body {
   border-radius: 5px;
 }
 
+.inputPanel {
+  min-width: 300px;
+  max-width: 800px;
+  margin: 30px auto;
+  overflow: auto;
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+}
+
+
+.controlPanel {
+  min-width: 300px;
+  max-width: 800px;
+  margin: 30px auto;
+  overflow: auto;
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+}
+
+
 .container {
   max-width: 800px;
   margin: 30px auto;
