@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import MapBuilder from './MapBuilder';
 
 /**
@@ -135,6 +135,38 @@ function Property ({ properties, setProperties, nav, setNav}) {
         </div>
     )
 
+}
+
+/**
+ * fetched the properties from the api call
+ */
+export const getProperties = async (url) => {
+    try {
+        const response = await axios.get(url);
+        const next = await response.data.next;
+        const prev = await response.data.previous;
+        return await response.data.results;
+    } catch(error) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return null;
+    }
+}
+
+export const getPropertyById = async (id) => {
+    const baseURL = "https://www.team13.xyz/api/";
+
+    try {
+        const response = await axios.get(baseURL + "id/" + id + "/?format=json");
+        const result = await response.data;
+        return [result];
+    } catch (error) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return null;
+    }
 }
 
 
