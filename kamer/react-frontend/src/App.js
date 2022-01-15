@@ -1,8 +1,7 @@
 import axios from "axios";
-import React from "react";
+import React, {useState} from "react";
 import ControlPanel from './Components/ControlPanel';
-import Property, {getProperties} from './Components/Property';
-import {useState} from "react";
+import Property from './Components/Property';
 import InputPanel from './Components/InputPanel';
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
@@ -15,9 +14,9 @@ function App() {
 
     /* state for the navigation */
     const [nav, setNav] = useState({
-        curr : `${BASE_URL}all/?format=json&page=1`,
-        next : '',
-        prev : '',
+        curr: `${BASE_URL}all/?format=json&page=1`,
+        next: '',
+        prev: '',
     });
 
     //show forms state
@@ -30,7 +29,7 @@ function App() {
             const curr = `${BASE_URL}all/?format=json&page=1`;
             setNav({
                 ...nav,
-                curr : curr,
+                curr: curr,
             });
         } else {
             setShowForm(form);
@@ -44,7 +43,7 @@ function App() {
         const curr = `${BASE_URL}id/${id}/?format=json`;
         setNav({
             ...nav,
-            curr : curr,
+            curr: curr,
         });
     }
 
@@ -52,25 +51,48 @@ function App() {
         const curr = `${BASE_URL}location/?format=json&latitude=${lat}&longitude=${long}`;
         setNav({
             ...nav,
-            curr : curr,
+            curr: curr,
         });
     }
 
-    const onCityPrefGet = async (city='' , orderBy='' , ascOrDesc='' , maxPrice='' , minPrice='' , pets_choice='' , minArea='' , maxArea='' , sqmBudget='' ) => {
-        const curr = `${BASE_URL}city/${city}/?format=json&orderBy=${orderBy}&ascOrDesc=${ascOrDesc}&maxPrice=${maxPrice}&minPrice=${minPrice}&pets_choice=${pets_choice}&minArea=${minArea}&maxArea=${maxArea}&sqmBudget=${sqmBudget}`;
+    const onCityPrefGet = async (city = '', orderBy = '', ascOrDesc = '', maxPrice = '', minPrice = '', pets_choice = '', minArea = '', maxArea = '', sqmBudget = '') => {
+        // const curr = `${BASE_URL}city/${city}/?format=json&orderBy=${orderBy}&ascOrDesc=${ascOrDesc}&maxPrice=${maxPrice}&minPrice=${minPrice}&pets_choice=${pets_choice}&minArea=${minArea}&maxArea=${maxArea}&sqmBudget=${sqmBudget}`;
+        let curr = `${BASE_URL}city/${city}/?format=json`
+        if (orderBy !== '') {
+            curr += `&orderBy=${orderBy}`;
+        }
+        if (ascOrDesc !== '') {
+            curr += `&ascOrDesc=${ascOrDesc}`;
+        }
+        if (maxPrice !== '') {
+            curr += `&maxPrice=${maxPrice}`;
+        }
+        if (minPrice !== '') {
+            curr += `&minPrice=${minPrice}`;
+        }
+        if (pets_choice !== '') {
+            curr += `&pets=${pets_choice}`
+        }
+        if (minArea !== '') {
+            curr += `&minArea=${minArea}`;
+        }
+        if (maxArea !== '') {
+            curr += `&maxArea=${maxArea}`;
+        }
+        if (sqmBudget !== '') {
+            curr += `&sqmBudget=${sqmBudget}`;
+        }
         console.log(curr);
         setNav({
             ...nav,
-            curr : curr,
+            curr: curr,
         });
     }
-
-
 
 
     return (
         <div className="bigChungus">
-            <ControlPanel 
+            <ControlPanel
                 onButtonClick={onControlPanelClick}
             />
 
