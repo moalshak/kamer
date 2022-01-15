@@ -75,7 +75,7 @@ def add_property(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
 @authentication_classes((SessionAuthentication, TokenAuthentication))
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 def property_by_id(request, externalId, format=None):
     try:
         p = Property.objects.get(externalId=externalId)
@@ -108,55 +108,37 @@ def property_by_id(request, externalId, format=None):
 '''
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-@renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
-@authentication_classes((SessionAuthentication, TokenAuthentication))
-@permission_classes((IsAuthenticated, ))
-def get_propertyByLocation(request, format=None):
-    if request.method == 'GET' or request.method == 'PUT' or request.method == 'DELETE':
-        latitude = request.GET.get("latitude", '0')
-        longitude = request.GET.get("longitude", '0')
-        return locationHelper(latitude, longitude, request)
+class get_propertyByLocation(ListAPIView):
+    serializer_class = PropertySerializer
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+    permission_classes = (IsAuthenticated,)
+    pagination_class = PageNumberPagination
 
+    def get_queryset(self):
+        try:
+            latitude = self.request.GET.get('latitude', '0')
+            longitude = self.request.GET.get('longitude', '0')
+            return Property.objects.filter(latitude=latitude).filter(longitude=longitude)
+        except Property.DoesNotExist:
+            return None
 
-'''
-    the helper function for the location
-    dependent on the request:
-        GET : returns a list of all properties that match the longitude and latitude
-        PUT : updates all the properties that match the longitude and latitude
-        DELETE : deletes all the properties that match the longitude and latitude
-'''
-
-
-def locationHelper(latitude, longitude, request):
-    # TODO: only allow an the PUT if the renter of the this property is the requester (by adding in the database
-    #  an owner field and populating it) then uncomment below
-    '''
-        requester = request.user
-        if request.method != 'GET' and p.owner != requester:
-            return Response({'Response':"You do not have permission to edit that"})
-    '''
-    try:
-        p = Property.objects.filter(latitude=latitude).filter(longitude=longitude)
-    except Property.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    ids = []
-    for p_ in p:
-        ids.append(p_.externalId)
-
-    if request.method == 'PUT':
+    def put(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        ids = []
+        for p_ in queryset:
+            ids.append(p_.externalId)
         for id_ in ids:
             p2 = Property.objects.get(externalId=id_)
             for key in request.data.keys():
                 setattr(p2, str(key), request.data[key])
             p2.save()
         return Response(status=status.HTTP_202_ACCEPTED)
-    elif request.method == 'DELETE':
-        p.delete()
+
+    def delete(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        queryset.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
-    elif request.method == 'GET':
-        serializer = PropertySerializer(p, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 '''
@@ -177,7 +159,7 @@ def locationHelper(latitude, longitude, request):
 @api_view(['GET'])
 @renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
 @authentication_classes((SessionAuthentication, TokenAuthentication))
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 def stats(request, city, format=None):
     if request.method == 'GET':
         p = Property.objects.filter(city=city)
@@ -240,17 +222,13 @@ class CityPrefListView(ListAPIView):
         # not be given in the url aka KeyError.
         #TODO check if we are receiving the parameters
         city = self.kwargs['city']
+
         # Order by :: Default : rent
-        try:
-            orderBY = self.kwargs['orderBy']
-        except KeyError:
-            orderBY = 'rent'
+        orderBY = self.request.GET.get('orderBy', 'rent')
 
         # Ascending or Descending :: Default : Ascending
-        try:
-            ascOrDesc = self.kwargs['ascOrDesc']
-        except KeyError:
-            ascOrDesc = 'ASC'
+
+        ascOrDesc = self.request.GET.get('ascOrDesc', 'ASC')
 
         # Price Range :: Default : 1000
         try:
@@ -259,22 +237,13 @@ class CityPrefListView(ListAPIView):
             defaultMaxPrice = 1000
 
         # Min Price :: Default 0
-        try:
-            minPrice = D(self.kwargs['minPrice'])
-        except KeyError:
-            minPrice = 0
+        minPrice = D(self.request.GET.get('minPrice', 0))
 
         # Max Price :: Default : defaultMaxPrice
-        try:
-            maxPrice = D(self.kwargs['maxPrice'])
-        except KeyError:
-            maxPrice = defaultMaxPrice
+        maxPrice = D(self.request.GET.get('maxPrice', defaultMaxPrice))
 
         # Pets :: Default : %
-        try:
-            pets_choice = self.kwargs['pets']
-        except KeyError:
-            pets_choice = '%'
+        pets_choice = self.request.GET.get('pets', '%')
 
         # Area :: Default : 1000
         try:
@@ -283,22 +252,13 @@ class CityPrefListView(ListAPIView):
             defaultMaxArea = 1000
 
         # min area :: Default : 0
-        try:
-            minArea = int(self.kwargs['minArea'])
-        except KeyError:
-            minArea = 0
+        minArea = int(self.request.GET.get('minArea', 0))
 
         # min area :: Default : defaultMaxArea
-        try:
-            maxArea = int(self.kwargs['maxArea'])
-        except KeyError:
-            maxArea = defaultMaxArea
+        maxArea = int(self.request.GET.get('maxArea', defaultMaxArea))
 
         # sqmBudget :: Default : defaultMaxPrice / defaultMaxArea
-        try:
-            sqmBudget = D(self.kwargs['sqmBudget'])
-        except KeyError:
-            sqmBudget = defaultMaxPrice / defaultMaxArea
+        sqmBudget = D(self.request.GET.get('sqmBudget', defaultMaxPrice / defaultMaxArea))
 
         query = f"SELECT * FROM api_property    " \
                 f"WHERE city LIKE '{city}' " \

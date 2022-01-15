@@ -11,7 +11,7 @@ urlpatterns = [
     path('all/', views.PropertiesListView.as_view(), name="list"),
     path('id/<str:externalId>/', views.property_by_id, name="byId"),
     path('city/<str:city>/', views.CityPrefListView.as_view(), name="byCity"),
-    path('location/', views.get_propertyByLocation, name="byLocation"),
+    path('location/', views.get_propertyByLocation.as_view(), name="byLocation"),
     path('city/stats/<str:city>/', views.stats, name="getStats")
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
