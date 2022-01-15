@@ -13,11 +13,12 @@ function App() {
 
     axios.defaults.headers.common['Authorization'] = 'Token ff27fca94c0c9461da6e327389e7b633224cd2fa'
 
-    //properties state
-    // `getProperties` will "watch" the `currUrl` and update whenever it (currUrl) changes
-    const [properties, setProperties] = useState([])
     /* state for the navigation */
-    const [nav, setNav] = useState(true);
+    const [nav, setNav] = useState({
+        curr : `${BASE_URL}all/?format=json&page=1`,
+        next : '',
+        prev : '',
+    });
 
     //show forms state
     const [idForm, setIdForm] = useState(false)
@@ -29,9 +30,11 @@ function App() {
     const onControlPanelClick = async (form) => {
         /* the form is undefined whenever the `search by all` is clicked */
         if (form === undefined) {
-            const {data, next, prev} = await getProperties(`${BASE_URL}all/?format=json&page=1`);
-            setProperties(data);
-            setNav(true);
+            const curr = `${BASE_URL}all/?format=json&page=1`;
+            setNav({
+                ...nav,
+                curr : curr,
+            });
         } else {
             setShowForm(form);
         }
@@ -41,9 +44,11 @@ function App() {
      * search by id is clicked
      * */
     const onIdGet = async (id) => {
-        const {data, next, prev} = await getProperties(`${BASE_URL}id/${id}/?format=json`);
-        setProperties(data);
-        setNav(false);
+        const curr = `${BASE_URL}id/${id}/?format=json`;
+        setNav({
+            ...nav,
+            curr : curr,
+        });
     }
 
 
@@ -53,7 +58,6 @@ function App() {
             onButtonClick={onControlPanelClick}
                 />
             <Property
-                properties={properties} setProperties={setProperties}
                 nav={nav} setNav={setNav}
             />
             <InputPanel

@@ -11,56 +11,37 @@ const BASE_URL = "https://www.team13.xyz/api/";
  * @returns a list of a list fetched from the API at a certain page
  */
 
-function Property ({ properties, setProperties, nav, setNav}) {
+function Property ({ nav, setNav}) {
     /* state for loading : if the api call is still getting processed */
     const [loading, setLoading] = useState(true);
-    
-    /* state for the url */
-    const [currUrl, setCurrUrl] = useState(`${BASE_URL}all/?format=json&page=1`)
-    const [nextUrl, setNextUrl] = useState(null)
-    const [prevUrl, setPrevUrl] = useState(null)
-    
-    /* state for the current page number the user is on */
-    const [curPage, setCurPage] = useState(1);
+    //properties state
+    const [properties, setProperties] = useState([])
 
-    // `getProperties` will "watch" the `currUrl` and update whenever it (currUrl) changes
-    useEffect(() => {
+
+    // `getProperties` will "watch" the `nav.curr` and update whenever it (currUrl) changes
+    useEffect(async () => {
         setLoading(true);
-        getProperties();
-    }, [currUrl])
-
-    /**
-     * fetched the properties from the api call
-     */
-    const getProperties = async () => {
-        try {
-            const response = await axios.get(currUrl);
-            const next = await response.data.next;
-            const prev = await response.data.previous;
-            setPrevUrl(prev);
-            setNextUrl(next);
-            setNav(true);
-            const data = await response.data.results;
-            setProperties(data);
-            setLoading(false); // data is fetched no longer loading
-        } catch(error) {
-            console.log(error);
-        }
-    }
+        const {data, next, prev} = await getProperties(nav.curr);
+        setProperties(data);
+        setNav({
+            ...nav,
+            next: next,
+            prev: prev,
+        });
+        setLoading(false);
+    }, [nav.curr])
 
     /**
      * requests data from the next/prev page of the API.. PAGINATION 😎
      */
     function nextPage() {
-        if (nextUrl != null) {
-            setCurrUrl(nextUrl);
-            setCurPage((curPage) => curPage + 1);
+        if (nav.next != null) {
+            setNav({...nav, curr : nav.next});
         }
     }
     function prevPage() {
-        if (prevUrl != null) {
-            setCurrUrl(prevUrl);
-            setCurPage((curPage) => curPage - 1);
+        if (nav.prev != null) {
+            setNav({...nav, curr : nav.prev});
         }
     }
     
@@ -68,19 +49,25 @@ function Property ({ properties, setProperties, nav, setNav}) {
      * Retrieves the page number from the url
      */
     function getPageNumber(place) {
+        let currentPageNumber;
+        if (nav.curr != null && nav.curr !== '') {
+            currentPageNumber = parseInt(nav.curr.split("&page=")[1]); // extract after ?page=x
+        }
+        if (!currentPageNumber) currentPageNumber = 1;
+
         switch (place) {
             case 'next':
-                return curPage + 1;
+                return currentPageNumber + 1;
             case 'current':
-                return curPage;
+                return currentPageNumber;
             case 'prev':
-                if (curPage - 1  > 0) {
-                    return curPage - 1;
+                if (currentPageNumber - 1  > 0) {
+                    return currentPageNumber - 1;
                 } else {
                     return null;
                 }
             default:
-                return curPage;
+                return currentPageNumber;
         }   
     }
 
@@ -88,19 +75,16 @@ function Property ({ properties, setProperties, nav, setNav}) {
      * Navigation component
      * */
     function Navigation () {
-        if (!nav) {
-            return null;
-        }
         return (
             <div className="nav">
                     <small>Current Page: {getPageNumber('current')} </small>
                     <br/>
-                    <small>Next Page: {getPageNumber('next')} </small>
+                {nav.next ? <small>Next Page: {getPageNumber('next')} </small> : null}
                     <br/>
-                    <small>Previous Page: {getPageNumber('prev')} </small>
+                {nav.prev ? <small>Previous Page: {getPageNumber('prev')}</small> : null}
                     <div className="NextPrevBtn">
-                        <button onClick={prevPage}>Previous Page</button>
-                        <button onClick={nextPage}>Next Page</button>
+                        {nav.prev ? <button onClick={prevPage}>Previous Page</button> : null}
+                        {nav.next ? <button onClick={nextPage}>Next Page</button> : null}
                     </div>
             </div>
         );
