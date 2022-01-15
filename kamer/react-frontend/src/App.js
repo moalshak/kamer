@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, {useState} from "react";
-import ControlPanel from './Components/ControlPanel';
-import Property from './Components/Property';
-import InputPanel from './Components/InputPanel';
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import ControlPanel from "./Components/ControlPanel";
+import Property from "./Components/Property";
+import InputPanel from "./Components/InputPanel";
+import Detail from "./Components/Detail";
+
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
 
@@ -94,25 +97,32 @@ function App() {
 
 
     return (
-        <div className="bigChungus">
-            <ControlPanel
-                onButtonClick={onControlPanelClick}
-            />
+        <Router>
+            <Routes>
+                <Route exact path="/" element={
+                    <div className="bigChungus">
+                        <ControlPanel
+                            onButtonClick={onControlPanelClick}
+                        />
 
-            <Property
-                nav={nav} setNav={setNav}
-            />
+                        <Property
+                            nav={nav} setNav={setNav}
+                        />
 
-            <InputPanel
-                formToShow={showForm}
-                onIdGet={onIdGet}
-                onLocationGet={onLocationGet}
-                onCityPrefGet={onCityPrefGet}
-            />
+                        <InputPanel
+                            formToShow={showForm}
+                            onIdGet={onIdGet}
+                            onLocationGet={onLocationGet}
+                            onCityPrefGet={onCityPrefGet}
+                        />
 
-            {/*{idForm && <FormId onGet={getPropertyById} />}
-            <PropertyFeed/>*/}
-        </div>
+                        {/*{idForm && <FormId onGet={getPropertyById} />}
+                            <PropertyFeed/>*/}
+                    </div>
+                }/>
+                <Route exact path="/property/:externalId" element={<Detail/>}/>
+            </Routes>
+        </Router>
     );
 }
 
