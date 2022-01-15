@@ -12,11 +12,14 @@ function App() {
 
     axios.defaults.headers.common['Authorization'] = 'Token ff27fca94c0c9461da6e327389e7b633224cd2fa'
 
-    /* state for the navigation */
+    /* state for the navigation
+    * `nav` is an object (hashMap / dictionary) that contains info about the navigation
+    *  */
     const [nav, setNav] = useState({
         curr: `${BASE_URL}all/?format=json&page=1`,
         next: '',
         prev: '',
+        count: '',
     });
 
     //show forms state

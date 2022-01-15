@@ -1,167 +1,327 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
+
+
+:root {
+    --backgroundColor: rgba(246, 241, 209);
+    --colorShadeA: rgb(106, 163, 137);
+    --colorShadeB: rgb(121, 186, 156);
+    --colorShadeC: rgb(150, 232, 195);
+    --colorShadeD: rgb(187, 232, 211);
+    --colorShadeE: rgb(205, 255, 232);
+}
+
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+}
+
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+    font-family: "OpenSans", sans-serif;
+    font-size: 1rem;
+    line-height: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    min-height: 100vh;
+    background: var(--backgroundColor);
 }
 
+.nav {
+    text-align: center;
+    position: fixed;
+    width: 40%;
+    top: 0;
+    background: rgba(246, 241, 209);
+}
+
+
 .bigChungus {
-  display: flex;
-  margin: 30px auto;
-  padding: 30px;
-  border-radius: 5px;
+    display: flex;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 5px;
 }
 
 .propDiv {
-  background: #f4f4f4;
-  margin: 5px;
-  padding: 10px 20px;
+    background: rgb(234, 229, 201);
+    margin: 5px;
+    padding: 10px 20px;
 }
 
 .control {
-  margin: 30px auto;
-  padding: 30px;
-  border-radius: 5px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 5px;
 }
 
 .inputPanel {
-  min-width: 300px;
-  max-width: 800px;
-  margin: 30px auto;
-  overflow: auto;
-  min-height: 300px;
-  border: 1px solid steelblue;
-  padding: 30px;
-  border-radius: 5px;
+    height: 100%;
+    text-align: center;
+    position: fixed;
+    width: 18.72%;
+    right: 0;
+    top: 10px;
+    min-width: 300px;
+    max-width: 800px;
+    margin: 30px auto;
+    overflow: auto;
+    min-height: 300px;
+    /*border: 1px solid steelblue;*/
+    padding: 30px;
+    border-radius: 5px;
 }
 
 
 .controlPanel {
-  min-width: 300px;
-  max-width: 800px;
-  margin: 30px auto;
-  overflow: auto;
-  min-height: 300px;
-  border: 1px solid steelblue;
-  padding: 30px;
-  border-radius: 5px;
+    height: 100%;
+    text-align: center;
+    position: fixed;
+    width: 18.72%;
+    left: 0;
+    top: 10px;
+    min-width: 300px;
+    max-width: 800px;
+    margin: 30px auto;
+    overflow: auto;
+    min-height: 300px;
+    /*border: 1px solid steelblue;*/
+    padding: 30px;
+    border-radius: 5px;
 }
 
 
 .container {
-  max-width: 800px;
-  margin: 30px auto;
-  overflow: auto;
-  min-height: 300px;
-  border: 1px solid steelblue;
-  padding: 30px;
-  border-radius: 5px;
+    max-width: 800px;
+    margin: 30px auto;
+    overflow: auto;
+    min-height: 300px;
+    /*border: 1px solid steelblue;*/
+    padding: 30px;
+    border-radius: 5px;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+button {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    border: 0;
+    vertical-align: middle;
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: var(--colorShadeA);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: inherit;
+}
+
+.smallButton {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    vertical-align: middle;
+    text-decoration: none;
+    font-size: 11px;
+    margin: 20px;
+    color: var(--colorShadeA);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: inherit;
+    padding: 1em 2em;
+    border: 2px solid var(--colorShadeA);
+    border-radius: 1em;
+    background: var(--colorShadeE);
+    transform-style: preserve-3d;
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+
+.smallButton:before {
+    vertical-align: middle;
+
+    position: absolute;
+    content: "";
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--colorShadeC);
+    border-radius: inherit;
+    box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.75em 0 0 var(--colorShadeA);
+    transform: translate3d(0, 0.75em, -1em);
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+
+.smallButton:hover {
+    background: var(--colorShadeD);
+    transform: translate(0, 0.375em);
+}
+
+.smallButton:hover::before {
+    transform: translate3d(0, 0.75em, -1em);
+}
+
+.smallButton:focus {
+    outline: none;
+}
+
+.smallButton:active {
+    transform: translate(0em, 0.75em);
+}
+
+.smallButton:active::before {
+    transform: translate3d(0, 0, -1em);
+    box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.25em 0 0 var(--colorShadeB);
+}
+
+.smallButton {
+    display: block;
+    width: 100%;
 }
 
 
 .btn {
-  color: white;
-  background-color: tomato;
-  border: 1px;
-  border-color: black;
-  border-radius:5px;
-  font-size: 15px;
-  margin-top:10px;
-  padding: 10px 8px;
+    width: 100%;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    vertical-align: middle;
+    text-decoration: none;
+    font-size: 11px;
+    margin: 20px;
+    color: var(--colorShadeA);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: inherit;
+    padding: 1em 2em;
+    border: 2px solid var(--colorShadeA);
+    border-radius: 1em;
+    background: var(--colorShadeE);
+    transform-style: preserve-3d;
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
 }
 
-.butoon {
-  display: inline-block;
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 15px;
-  font-family: inherit;
+
+.btn:before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--colorShadeC);
+    border-radius: inherit;
+    box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.75em 0 0 var(--colorShadeA);
+    transform: translate3d(0, 0.75em, -1em);
+    transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+
+.btn:hover {
+    background: var(--colorShadeD);
+    transform: translate(0, 0.375em);
+}
+
+.btn:hover::before {
+    transform: translate3d(0, 0.75em, -1em);
 }
 
 .btn:focus {
-  outline: none;
+    outline: none;
 }
 
 .btn:active {
-  transform: scale(0.98);
+    transform: translate(0em, 0.75em);
+}
+
+.btn:active::before {
+    transform: translate3d(0, 0, -1em);
+    box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.25em 0 0 var(--colorShadeB);
 }
 
 .btn-block {
-  display: block;
-  width: 100%;
+    display: block;
+    width: 100%;
 }
 
 .task {
-  background: #f4f4f4;
-  margin: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
+    background: #f4f4f4;
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
 }
 
 .task.reminder {
-  border-left: 5px solid green;
+    border-left: 5px solid green;
 }
 
 .task h3 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .add-form {
-  margin-bottom: 40px;
+    margin-bottom: 40px;
 }
 
 .form-control {
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
 .form-control label {
-  display: block;
+    display: block;
 }
 
 .form-control input {
-  width: 100%;
-  height: 40px;
-  margin: 5px;
-  padding: 3px 7px;
-  font-size: 17px;
+    width: 100%;
+    height: 40px;
+    margin: 5px;
+    padding: 3px 7px;
+    font-size: 17px;
 }
 
 .form-control-check {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .form-control-check label {
-  flex: 1;
+    flex: 1;
 }
 
 .form-control-check input {
-  flex: 2;
-  height: 20px;
+    flex: 2;
+    height: 20px;
 }
 
 footer {
-  margin-top: 30px;
-  text-align: center;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
