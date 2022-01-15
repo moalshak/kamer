@@ -21,9 +21,6 @@ function App() {
     });
 
     //show forms state
-    const [idForm, setIdForm] = useState(false)
-    const [locationForm, setLocationForm] = useState(false)
-    const [cityForm, setCityForm] = useState(false)
     const [showForm, setShowForm] = useState('')
 
     /***/
@@ -51,19 +48,43 @@ function App() {
         });
     }
 
+    const onLocationGet = async (lat, long) => {
+        const curr = `${BASE_URL}location/?format=json&latitude=${lat}&longitude=${long}`;
+        setNav({
+            ...nav,
+            curr : curr,
+        });
+    }
+
+    const onCityPrefGet = async (city='' , orderBy='' , ascOrDesc='' , maxPrice='' , minPrice='' , pets_choice='' , minArea='' , maxArea='' , sqmBudget='' ) => {
+        const curr = `${BASE_URL}city/${city}/?format=json&orderBy=${orderBy}&ascOrDesc=${ascOrDesc}&maxPrice=${maxPrice}&minPrice=${minPrice}&pets_choice=${pets_choice}&minArea=${minArea}&maxArea=${maxArea}&sqmBudget=${sqmBudget}`;
+        console.log(curr);
+        setNav({
+            ...nav,
+            curr : curr,
+        });
+    }
+
+
+
 
     return (
         <div className="bigChungus">
             <ControlPanel 
-            onButtonClick={onControlPanelClick}
-                />
+                onButtonClick={onControlPanelClick}
+            />
+
             <Property
                 nav={nav} setNav={setNav}
             />
+
             <InputPanel
-            formToShow={showForm}
-            onIdGet={onIdGet}
-            /> 
+                formToShow={showForm}
+                onIdGet={onIdGet}
+                onLocationGet={onLocationGet}
+                onCityPrefGet={onCityPrefGet}
+            />
+
             {/*{idForm && <FormId onGet={getPropertyById} />}
             <PropertyFeed/>*/}
         </div>

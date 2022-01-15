@@ -2,29 +2,29 @@ import React from 'react'
 
 const FormCity = ({onGet}) => {
     const [city, setCity] = React.useState('')
-    const [orderBy, setOrderBy] = React.useState('rent')
-    const [ascOrDesc, setAscOrDesc] = React.useState('ASC')
-    const [maxPrice, setMaxPrice] = React.useState(1000)
-    const [minPrice, setMinPrice] = React.useState(0)
+    const [orderBy, setOrderBy] = React.useState('')
+    const [ascOrDesc, setAscOrDesc] = React.useState('')
+    const [maxPrice, setMaxPrice] = React.useState('')
+    const [minPrice, setMinPrice] = React.useState('')
     const [pets_choice, setPets_choice] = React.useState('')
-    const [minArea, setMinArea] = React.useState(0)
-    const [maxArea, setMaxArea] = React.useState(10)
-    const [sqmBudget, setSqmBudget] = React.useState(1)
+    const [minArea, setMinArea] = React.useState('')
+    const [maxArea, setMaxArea] = React.useState('')
+    const [sqmBudget, setSqmBudget] = React.useState('')
 
 
 
     const onSubmit = (e) => {
         e.preventDefault()
-        
+        onGet(city , orderBy , ascOrDesc , maxPrice , minPrice , pets_choice , minArea , maxArea , sqmBudget )
     }
 
     return (
         <form className='form-control' onSubmit={onSubmit}>
             <label>City</label>
-            <input type='text' placeholder='type city' value={city} onChange={(e) =>{
-                setCity(e.target.value)
-                console.log(city)
-            }}></input>
+            <input type='text' placeholder='type city' value={city} onChange={(e) => {
+    setCity(e.target.value)
+    console.log(city)
+}} required={true}/>
             <label>Order By</label>
             <input type='text' placeholder='type orderBy' value={orderBy} onChange={(e) =>{
                 setOrderBy(e.target.value)

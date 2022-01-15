@@ -238,7 +238,7 @@ class CityPrefListView(ListAPIView):
     def get_queryset(self):
         # each parameter has to have an except since it can also
         # not be given in the url aka KeyError.
-
+        #TODO check if we are receiving the parameters
         city = self.kwargs['city']
         # Order by :: Default : rent
         try:
@@ -308,5 +308,6 @@ class CityPrefListView(ListAPIView):
                 f"AND rent / areaSqm <= {sqmBudget} " \
                 f" ORDER BY {orderBY} {ascOrDesc} "
 
+        # TODO sqm budget default is retarded
         return Property.objects.raw(query)
     ####################################################

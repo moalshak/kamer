@@ -3,7 +3,7 @@ import FormId from './Forms/FormId';
 import FormLongLat from './Forms/FormLongLat';
 import FormCity from './Forms/FormCity';
 
-function InputPanel({formToShow, onIdGet}){
+function InputPanel({formToShow, onIdGet, onLocationGet, onCityPrefGet}){
     if (formToShow === '') {
         return (
             <div className="inputPanel">
@@ -14,8 +14,8 @@ function InputPanel({formToShow, onIdGet}){
     return (
         <div className="inputPanel">
             {formToShow === 'id' && <FormId onGet = {onIdGet} />}
-            {formToShow === 'location' && <FormLongLat />}
-            {formToShow === 'cityPref' && <FormCity />}
+            {formToShow === 'location' && <FormLongLat onGet = {onLocationGet} />}
+            {formToShow === 'cityPref' && <FormCity onGet = {onCityPrefGet}/>}
         </div>
     )
 }

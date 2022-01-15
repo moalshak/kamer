@@ -11,7 +11,7 @@ const BASE_URL = "https://www.team13.xyz/api/";
  * @returns a list of a list fetched from the API at a certain page
  */
 
-function Property ({ nav, setNav}) {
+function Property ({ nav, setNav }) {
     /* state for loading : if the api call is still getting processed */
     const [loading, setLoading] = useState(true);
     //properties state
@@ -167,7 +167,11 @@ export const getProperties = async (url) => {
         * available on tha page so get the data from `response.data`
         * */
         if (results === undefined) {
-            results = [response.data];
+            if(!Array.isArray(response.data)){
+                results = [response.data];
+            } else {
+                results = response.data;
+            }
         } else {
             next = await response.data.next;
             prev = await response.data.previous;
