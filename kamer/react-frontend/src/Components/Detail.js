@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {getProperties} from "./Property";
+import MapBuilder from "./MapBuilder";
 
 const BASE_URL = "https://www.team13.xyz/api/";
 
@@ -66,7 +67,7 @@ function Detail() {
                                 There has been an Error with loading Google Maps API script, please check that you provided correct google API key (AIzaSyBppjwBEh_iphL_o7XPFaVtRq02tL5Gzfc) or Client ID (-) to <LoadScript />
                                 Otherwise it is a Network issue.
                                 */}
-                            {/*<MapBuilder lng = {prop.longitude} lat={prop.latitude}/>*/}
+                            <MapBuilder lng = {prop.longitude} lat={prop.latitude}/>
 
                         </ul>
                     </div>
