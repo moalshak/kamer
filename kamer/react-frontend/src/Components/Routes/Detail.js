@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {getProperties} from "./Property";
-import MapBuilder from "./MapBuilder";
-import {BASE_URL} from "../App";
+import {getProperties} from "../Property";
+import MapBuilder from "../MapBuilder";
+import {BASE_URL} from "../../App";
 
 /**
  * Calls the API through a get method

@@ -105,8 +105,11 @@ function Property({nav, setNav}) {
                                 <Link to={`/property/${prop.externalId}`}> {prop.pageTitle} </Link>
                             </h2>
                         </li>
+                        <Link style={{"text-align": "right"}} to={`/edit/${prop.externalId}`}>Edit This
+                            Property</Link>
                         <ul>
-                            <img className="center" src={prop.coverImageUrl}/>
+                            <img className="center" src={prop.coverImageUrl}
+                                 alt={"Sorry Image Was Deleted :("}/>
                             <li>Rent Price: € {prop.rent} </li>
                             <li>Placed In: {prop.city} </li>
                             <li>Property Type: {prop.propertyType} </li>
@@ -178,7 +181,7 @@ export const getProperties = async (url) => {
 
 /**
  * Deletes a property at the given url with the given payload
- * 
+ *
  * @param url the url to `DELETE` at
  * @param payload the payload to send with the request
  */

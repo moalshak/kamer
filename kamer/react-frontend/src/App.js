@@ -2,11 +2,11 @@ import axios from "axios";
 import React, {useState} from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import ControlPanel from "./Components/ControlPanel";
-import Property from "./Components/Property";
-import {delProperty, postProperty, getCityStats, putId, putLocation} from "./Components/Property";
+import Property, {delProperty, getCityStats, postProperty, putId, putLocation} from "./Components/Property";
 import InputPanel from "./Components/InputPanel";
-import Detail from "./Components/Detail";
+import Detail from "./Components/Routes/Detail";
 import StatsModal from "./Components/StatsModal";
+import Edit from "./Components/Routes/Edit";
 
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
@@ -17,7 +17,15 @@ function App() {
 
     axios.defaults.headers.common['Authorization'] = 'Token ff27fca94c0c9461da6e327389e7b633224cd2fa'
     const [showModal, setShowModal] = useState(false);
-    const [statsModalState, setStatsModalState] = useState({city:"none", rcMean:0, rdMean:0, rcMedian:0, rdMedian:0, rcSd:0, rdSd:0})
+    const [statsModalState, setStatsModalState] = useState({
+        city: "none",
+        rcMean: 0,
+        rdMean: 0,
+        rcMedian: 0,
+        rdMedian: 0,
+        rcSd: 0,
+        rdSd: 0
+    })
 
     /* state for the navigation
     * `nav` is an object (hashMap / dictionary) that contains info about the navigation
@@ -60,7 +68,7 @@ function App() {
             });
         } else if (opt === 'del') {
             const curr = `${BASE_URL}id/${id}/`;
-            delProperty(curr, {});
+            await delProperty(curr, {});
         }
     }
 
@@ -74,31 +82,31 @@ function App() {
 
     const onCityStatsGet = async (city) => {
         const data = await getCityStats(city);
-        if(data != null){
+        if (data != null) {
             setStatsModalState(data);
         } else {
-            setStatsModalState({city:"City not found"});
+            setStatsModalState({city: "City not found"});
         }
         setShowModal(true);
     }
 
     const onPropertyPost = async (details) => {
-        postProperty(`${BASE_URL}all/?format=json`, details)
+        await postProperty(`${BASE_URL}all/?format=json`, details)
     }
 
     const onIdPut = async (details) => {
-        putId(`${BASE_URL}id/${details["externalId"]}/?format=json`, details)
+        await putId(`${BASE_URL}id/${details["externalId"]}/?format=json`, details)
     }
 
     const onLocationPut = async (details) => {
-        putLocation(`${BASE_URL}location/?format=json&latitude=${details["latitude"]}&longitude=${details["longitude"]}`, details);
+        await putLocation(`${BASE_URL}location/?format=json&latitude=${details["latitude"]}&longitude=${details["longitude"]}`, details);
     }
 
     /**
      * Fetches the properties from the api and updates the UI
-     * 
+     *
      * @param pref an object that contains preferences
-    */
+     */
     const onCityPrefGet = async (pref) => {
         let curr = `${BASE_URL}city/${pref.city}/?format=json`
         if (pref.orderBy !== '') {
@@ -137,7 +145,9 @@ function App() {
             <Routes>
                 <Route exact path="/" element={
                     <div className="bigChungus">
-                        {showModal && <StatsModal onClose={() => {setShowModal(false)}} state={statsModalState} />}
+                        {showModal && <StatsModal onClose={() => {
+                            setShowModal(false)
+                        }} state={statsModalState}/>}
                         <ControlPanel
                             onButtonClick={onControlPanelClick}
                             on
@@ -157,11 +167,12 @@ function App() {
                             onIdPut={onIdPut}
                             onLocationPut={onLocationPut}
                         />
-                        
+
                     </div>
-                    
+
                 }/>
                 <Route exact path="/property/:externalId" element={<Detail/>}/>
+                <Route exact path="/edit/:externalId" element={<Edit onGet={onIdPut}/>}/>
             </Routes>
         </Router>
     );

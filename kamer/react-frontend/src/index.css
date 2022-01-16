@@ -100,6 +100,7 @@ body {
 
 .container {
     max-width: 800px;
+    min-width: 800px;
     margin: 120px auto;
     overflow: auto;
     min-height: 300px;
@@ -363,4 +364,10 @@ footer {
     padding: 10px;
     border-top: 1px solid #EEEEEE;
     border-bottom: 1px solid#EEEEEE;
+}
+
+textarea{
+    width: 100%;
+    font-family: "OpenSans", sans-serif;
+    font-size: 1rem;
 }
