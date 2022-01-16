@@ -107,6 +107,11 @@ body {
     border-radius: 5px;
 }
 
+.leaflet-container{
+    height: 300px;
+    width: 100%;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
