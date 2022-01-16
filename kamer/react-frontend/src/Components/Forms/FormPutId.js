@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FormPost = ({onGet}) => {
+const FormPutId = ({onGet}) => {
     const [externalId, setExternalId] = React.useState('')
     const [areaSqm, setAreaSqm] = React.useState('')
     const [city, setCity] = React.useState('')
@@ -33,8 +33,6 @@ const FormPost = ({onGet}) => {
     return (
         <form className='form-control' onSubmit={onSubmit}>
             
-
-
 
 
             <label>ExternalID</label>
@@ -136,9 +134,9 @@ const FormPost = ({onGet}) => {
 
 
 
-            <input type='submit' value='Post Property'/>
+            <input type='submit' value='Saves Changes'/>
         </form>
     )
 }
 
-export default FormPost
+export default FormPutId

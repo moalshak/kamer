@@ -7,7 +7,7 @@ function Button({ text, form, onButtonClick }) {
 
     return (
         <div className="SpawnButton">
-            <button className='btn' onClick={onButtonClickLocal}>Search By {text}</button>
+            <button className='btn' onClick={onButtonClickLocal}>{text}</button>
         </div>
     );
 }

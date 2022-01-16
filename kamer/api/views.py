@@ -73,7 +73,7 @@ def add_property(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer,  CSVRenderer))
 @authentication_classes((SessionAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated,))
 def property_by_id(request, externalId, format=None):

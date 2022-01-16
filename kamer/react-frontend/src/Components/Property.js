@@ -4,7 +4,6 @@ import {Link} from "react-router-dom";
 import MapBuilder from "./MapBuilder";
 
 
-const BASE_URL = "https://www.team13.xyz/api/";
 
 /**
  * Calls the API through a get method
@@ -107,33 +106,13 @@ function Property({nav, setNav}) {
                             </h2>
                         </li>
                         <ul>
-                            {/*<h2>{prop.pageTitle}</h2>*/}
                             <img className="center" src={prop.coverImageUrl}/>
-                            {/*<li>AreaSqm: {prop.areaSqm} </li>*/}
-                            {/*<li>{prop.pageTitle} </li>*/}
                             <li>Rent Price: € {prop.rent} </li>
                             <li>Placed In: {prop.city} </li>
                             <li>Property Type: {prop.propertyType} </li>
                             <li>Gender: {prop.gender} </li>
                             {prop.isRoomActive ? <li> IsRoomActive: {prop.isRoomActive} </li> : null}
                             <li>Property Id : {prop.externalId}</li>
-                            {/*<li>Furnish: {prop.furnish} </li>*/}
-                            {/*<li>Latitude: {prop.latitude} </li>*/}
-                            {/*<li>Longitude: {prop.longitude} </li>*/}
-                            {/*<li>PostalCode: {prop.postalCode} </li>*/}
-                            {/*<li>AdditionalCost: {prop.additionalCost} </li>*/}
-                            {/*<li>Deposit: {prop.deposit} </li>*/}
-                            {/*<h4>DescriptionTranslated:</h4>*/}
-                            {/*<p>{prop.descriptionTranslated} </p>*/}
-                            {/*<li>PageDescription: {prop.pageDescription} </li>*/}
-                            {/*<li>Pets: {prop.pets} </li>*/}
-                            {/*<li>Roommates: {prop.roommates} </li>*/}
-                            {/* FIXME: NOTE::: I have disabled the maps since at sometimes the Google api will refuse to give
-                                    a response for some reason and that would crash the whole UI... maybe a genuine api will fix it ?
-                                I got this error :
-                                There has been an Error with loading Google Maps API script, please check that you provided correct google API key (AIzaSyBppjwBEh_iphL_o7XPFaVtRq02tL5Gzfc) or Client ID (-) to <LoadScript />
-                                Otherwise it is a Network issue.
-                                */}
                             <MapBuilder lng={prop.longitude} lat={prop.latitude}/>
 
                         </ul>
@@ -189,6 +168,43 @@ export const getProperties = async (url) => {
             prev: prev,
             count: count,
         });
+    } catch (error) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return null;
+    }
+}
+
+
+export const delProperty = async (url, payload) => {
+    try {
+        console.log('Here');
+        const response = await axios.delete(url, payload);
+        console.log(response);
+        console.log(response.status);
+        return response;
+    } catch (error) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return null;
+    }
+}
+
+
+/**
+ * Does a post request to the sepecified url aka endpoints given a payload
+ *
+ * @param url the endpoint to request to
+ * @param payload the payload to send with the request
+ *
+ * @returns the response data
+ * */
+export const postProperty = async (url, payload) => {
+    try {
+        const response = await axios.post(url, payload);
+        
     } catch (error) {
         console.log(error.response);
         console.log(error.response.status);

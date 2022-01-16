@@ -2,8 +2,7 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {getProperties} from "./Property";
 import MapBuilder from "./MapBuilder";
-
-const BASE_URL = "https://www.team13.xyz/api/";
+import {BASE_URL} from "../App";
 
 /**
  * Calls the API through a get method
@@ -61,12 +60,6 @@ function Detail() {
                             <li>PageTitle: {prop.pageTitle} </li>
                             <li>Pets: {prop.pets} </li>
                             <li>Roommates: {prop.roommates} </li>
-                            {/* FIXME: NOTE::: I have disabled the maps since at sometimes the Google api will refuse to give
-                                    a response for some reason and that would crash the whole UI... maybe a genuine api will fix it ?
-                                I got this error :
-                                There has been an Error with loading Google Maps API script, please check that you provided correct google API key (AIzaSyBppjwBEh_iphL_o7XPFaVtRq02tL5Gzfc) or Client ID (-) to <LoadScript />
-                                Otherwise it is a Network issue.
-                                */}
                             <MapBuilder lng = {prop.longitude} lat={prop.latitude}/>
 
                         </ul>

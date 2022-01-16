@@ -3,9 +3,10 @@ import React, {useState} from 'react';
 const FormId = ({onGet}) => {
     const [id, setId] = useState('')
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-        onGet(id.trim())
+    const onSubmit = (event) => {
+        event.preventDefault()
+        const opt = event.target.name; // option -> delete or find
+        onGet(id.trim(), opt)
     }
 
     return (
@@ -15,7 +16,8 @@ const FormId = ({onGet}) => {
                 setId(e.target.value)
                 console.log(id)
             }} required={true}/>
-            <input type='submit' value='Find Property'/>
+            <button onClick={onSubmit} name="find" >Find Property</button>
+            <button onClick={onSubmit} name="del" >Delete Property</button>
         </form>
     )
 }

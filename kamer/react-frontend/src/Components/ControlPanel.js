@@ -4,10 +4,13 @@ import Button from "./Button";
 function ControlPanel({onButtonClick}) {
     return (
         <div className="controlPanel">
-            <Button text="ALL" onButtonClick={onButtonClick} />
-            <Button text="ID" onButtonClick={onButtonClick} form='id'/>
-            <Button text="Longitude & Latitude" onButtonClick={onButtonClick} form='location'/>
-            <Button text="Preference" onButtonClick={onButtonClick} form='cityPref'/>
+            <Button text="View All Properties" onButtonClick={onButtonClick} />
+            <Button text="By ID" onButtonClick={onButtonClick} form='id'/>
+            <Button text="Search By Longitude & Latitude" onButtonClick={onButtonClick} form='location'/>
+            <Button text="Search By Preference" onButtonClick={onButtonClick} form='cityPref'/>
+            <Button text="City Statistics" onButtonClick={onButtonClick} form='stats'/>
+            <Button text="Add A Property" onButtonClick={onButtonClick} form='addProp'/>
+            <Button text="Edit By Property ID" onButtonClick={onButtonClick} form='editId'/>
         </div>
     )
 }
