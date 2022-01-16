@@ -1,7 +1,6 @@
 import React from 'react'
 
-const FormPutId = ({onGet}) => {
-    const [externalId, setExternalId] = React.useState('')
+const FormPost = ({onGet}) => {
     const [areaSqm, setAreaSqm] = React.useState('')
     const [city, setCity] = React.useState('')
     const [coverImageUrl, setCoverImageUrl] = React.useState('')
@@ -16,7 +15,6 @@ const FormPutId = ({onGet}) => {
     const [deposit, setDeposit] = React.useState('')
     const [descriptionTranslated, setDescriptionTranslated] = React.useState('')
     const [gender, setGender] = React.useState('')
-    const [isRoomActive, setIsRoomActive] = React.useState('')
     const [pageDescription, setPageDescription] = React.useState('')
     const [pageTitle, setPageTitle] = React.useState('')
     const [pets, setPets] = React.useState('')
@@ -24,7 +22,7 @@ const FormPutId = ({onGet}) => {
  
     const onSubmit = (e) => {
         e.preventDefault()
-        onGet({"externalId": externalId, "areaSqm": areaSqm, "city": city, "coverImageUrl": coverImageUrl, "furnish": furnish, "latitude": latitude,
+        onGet({"areaSqm": areaSqm, "city": city, "coverImageUrl": coverImageUrl, "furnish": furnish, "latitude": latitude,
             "longitude": longitude, "postalCode": postalCode, "propertyType": propertyType, "rent": rent, "title": title, "additionalCost": additionalCost,
             "deposit": Number(deposit), "descriptionTranslated": descriptionTranslated, "gender": gender, "isRoomActive": true, "pageDescription":pageDescription,
             "pageTitle": pageTitle, "pets": pets, "roommates":roommates})
@@ -34,11 +32,6 @@ const FormPutId = ({onGet}) => {
         <form className='form-control' onSubmit={onSubmit}>
             
 
-
-            <label>ExternalID</label>
-            <input type='text' placeholder='type ExternalID' value={externalId} onChange={(e) => {
-    setExternalId(e.target.value)
-}}required={true}/>
 
             <label>Area Square Meter</label>
             <input type='text' placeholder='type max Area Square Meter' value={areaSqm} onChange={(e) => {
@@ -124,7 +117,7 @@ const FormPutId = ({onGet}) => {
             <label>Pets</label>
             <input type='text' placeholder='type pets' value={pets} onChange={(e) => {
     setPets(e.target.value)
-}}required={true}/>
+}}required={true} maxLength={3}/>
 
 
             <label>Roommates</label>
@@ -134,9 +127,9 @@ const FormPutId = ({onGet}) => {
 
 
 
-            <input type='submit' value='Saves Changes'/>
+            <input type='submit' value='Save Changes'/>
         </form>
     )
 }
 
-export default FormPutId
+export default FormPost

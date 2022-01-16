@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import ControlPanel from "./Components/ControlPanel";
 import Property from "./Components/Property";
-import delProperty from "./Components/Property";
+import {delProperty, postProperty, getCityStats, putId, putLocation} from "./Components/Property";
 import InputPanel from "./Components/InputPanel";
 import Detail from "./Components/Detail";
 import StatsModal from "./Components/StatsModal";
@@ -49,18 +49,18 @@ function App() {
     /**
      * search by id is clicked
      * @param id the id of the property
-     * @param opt the option
+     * @param opt the option : delete or find
      * */
     const onIdGet = async (id, opt) => {
-        const curr = `${BASE_URL}id/${id}/?format=json`;
         if (opt === 'find') {
+            const curr = `${BASE_URL}id/${id}/?format=json`;
             setNav({
                 ...nav,
                 curr: curr,
             });
         } else if (opt === 'del') {
-            console.log('Clicked!');
-            await delProperty(curr, {});
+            const curr = `${BASE_URL}id/${id}/`;
+            delProperty(curr, {});
         }
     }
 
@@ -73,80 +73,58 @@ function App() {
     }
 
     const onCityStatsGet = async (city) => {
-        const url = `${BASE_URL}city/stats/${city}/?format=json`
-        const response = await axios.get(url);
-        let rcMean = response.data.rcMean;
-        let rdMean = response.data.rdMean;
-        let rcMedian = response.data.rcMedian;
-        let rdMedian = response.data.rdMedian;
-        let rcSd = response.data.rcSd;
-        let rdSd = response.data.rdSd;
-        setStatsModalState({city:city, rcMean: rcMean, rdMean: rdMean, rcMedian: rcMedian, rdMedian: rdMedian, rcSd: rcSd, rdSd: rdSd})
+        const data = await getCityStats(city);
+        if(data != null){
+            setStatsModalState(data);
+        } else {
+            setStatsModalState({city:"City not found"});
+        }
         setShowModal(true);
-        console.log(setStatsModalState);
     }
 
     const onPropertyPost = async (details) => {
-        console.log(details)
-        const response = await axios.post(`${BASE_URL}all/?format=json`, details);
-        
-        // const response = await axios.post(`${BASE_URL}all/?format=json`, {
-        //     "externalId": "room-1000",
-        //     "areaSqm": 14,
-        //     "city": "Rotterdam",
-        //     "coverImageUrl": "https://resources.kamernet.nl/image/913b4b03-57b2-4821-aae4-7423dca14888",
-        //     "furnish": "Unfurnished",
-        //     "latitude": "51.8966010000",
-        //     "longitude": "4.5149930000",
-        //     "postalCode": "3074HN",
-        //     "propertyType": "Room",
-        //     "rent": 500,
-        //     "title": "West-Varkenoordseweg",
-        //     "deposit": 500,
-        //     "descriptionTranslated": "Nice room for rent, accros the Feyenoord stadium in Rotterdam. It has shared Bathroom and kitchen. There are a few room for rent in the building, so if you maybe like to live with your friends, this is maybe an option. Pls contact us for more information.",
-        //     "gender": "Mixed",
-        //     "isRoomActive": false,
-        //     "pageDescription": "Room for rent in Rotterdam,  West-Varkenoordseweg, for €500 a month. Interested? React now!",
-        //     "pageTitle": "Room for rent in Rotterdam €500 | Kamernet",
-        //     "pets": "No",
-        //     "roommates": "5"
-        // });
-        console.log(response)
-
+        postProperty(`${BASE_URL}all/?format=json`, details)
     }
 
-    const onIdPut = async (id, details) => {
-        console.log(details)
-        const response = await axios.put(`${BASE_URL}id/${id}/?format=json`, details);
+    const onIdPut = async (details) => {
+        putId(`${BASE_URL}id/${details["externalId"]}/?format=json`, details)
     }
 
-    const onCityPrefGet = async (city = '', orderBy = '', ascOrDesc = '', maxPrice = '', minPrice = '', pets_choice = '', minArea = '', maxArea = '', sqmBudget = '') => {
-        let curr = `${BASE_URL}city/${city}/?format=json`
-        if (orderBy !== '') {
-            curr += `&orderBy=${orderBy}`;
+    const onLocationPut = async (details) => {
+        putLocation(`${BASE_URL}location/?format=json&latitude=${details["latitude"]}&longitude=${details["longitude"]}`, details);
+    }
+
+    /**
+     * Fetches the properties from the api and updates the UI
+     * 
+     * @param pref an object that contains preferences
+    */
+    const onCityPrefGet = async (pref) => {
+        let curr = `${BASE_URL}city/${pref.city}/?format=json`
+        if (pref.orderBy !== '') {
+            curr += `&orderBy=${pref.orderBy}`;
         }
-        if (ascOrDesc !== '') {
-            curr += `&ascOrDesc=${ascOrDesc}`;
+        if (pref.ascOrDesc !== '') {
+            curr += `&ascOrDesc=${pref.ascOrDesc}`;
         }
-        if (maxPrice !== '') {
-            curr += `&maxPrice=${maxPrice}`;
+        if (pref.maxPrice !== '') {
+            curr += `&maxPrice=${pref.maxPrice}`;
         }
-        if (minPrice !== '') {
-            curr += `&minPrice=${minPrice}`;
+        if (pref.minPrice !== '') {
+            curr += `&minPrice=${pref.minPrice}`;
         }
-        if (pets_choice !== '') {
-            curr += `&pets=${pets_choice}`
+        if (pref.pets_choice !== '') {
+            curr += `&pets=${pref.pets_choice}`
         }
-        if (minArea !== '') {
-            curr += `&minArea=${minArea}`;
+        if (pref.minArea !== '') {
+            curr += `&minArea=${pref.minArea}`;
         }
-        if (maxArea !== '') {
-            curr += `&maxArea=${maxArea}`;
+        if (pref.maxArea !== '') {
+            curr += `&maxArea=${pref.maxArea}`;
         }
-        if (sqmBudget !== '') {
-            curr += `&sqmBudget=${sqmBudget}`;
+        if (pref.sqmBudget !== '') {
+            curr += `&sqmBudget=${pref.sqmBudget}`;
         }
-        console.log(curr);
         setNav({
             ...nav,
             curr: curr,
@@ -159,7 +137,7 @@ function App() {
             <Routes>
                 <Route exact path="/" element={
                     <div className="bigChungus">
-                        {showModal && <StatsModal onClose={setShowModal(false)} state={statsModalState} />}
+                        {showModal && <StatsModal onClose={() => {setShowModal(false)}} state={statsModalState} />}
                         <ControlPanel
                             onButtonClick={onControlPanelClick}
                             on
@@ -176,6 +154,8 @@ function App() {
                             onCityPrefGet={onCityPrefGet}
                             onCityStatsGet={onCityStatsGet}
                             onPropertyPost={onPropertyPost}
+                            onIdPut={onIdPut}
+                            onLocationPut={onLocationPut}
                         />
                         
                     </div>

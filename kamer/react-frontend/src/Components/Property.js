@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import MapBuilder from "./MapBuilder";
 
-
+import {BASE_URL} from "../App";
 
 /**
  * Calls the API through a get method
@@ -176,13 +176,15 @@ export const getProperties = async (url) => {
     }
 }
 
-
+/**
+ * Deletes a property at the given url with the given payload
+ * 
+ * @param url the url to `DELETE` at
+ * @param payload the payload to send with the request
+ */
 export const delProperty = async (url, payload) => {
     try {
-        console.log('Here');
         const response = await axios.delete(url, payload);
-        console.log(response);
-        console.log(response.status);
         return response;
     } catch (error) {
         console.log(error.response);
@@ -204,7 +206,61 @@ export const delProperty = async (url, payload) => {
 export const postProperty = async (url, payload) => {
     try {
         const response = await axios.post(url, payload);
-        
+        return response;
+    } catch (error) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return null;
+    }
+}
+
+/**
+ * Does a put request to the sepecified url aka endpoints given a payload
+ *
+ * @param url the endpoint to request to
+ * @param payload the payload to send with the request
+ *
+ * @returns the response data
+ * */
+export const putId = async (url, payload) => {
+    try {
+        const response = await axios.put(url, payload);
+        return response;
+    } catch (error) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return null;
+    }
+}
+
+export const putLocation = async (url, payload) => {
+    try {
+        const response = await axios.put(url, payload);
+        return response;
+    } catch (error) {
+        console.log(error.response);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return null;
+    }
+}
+
+
+export const getCityStats = async (city) => {
+    try {
+        const url = `${BASE_URL}city/stats/${city}/?format=json`
+        const response = await axios.get(url);
+        return ({
+            city: city,
+            rcMean: response.data.rcMean,
+            rdMean: response.data.rdMean,
+            rcMedian: response.data.rcMedian,
+            rdMedian: response.data.rdMedian,
+            rcSd: response.data.rcSd,
+            rdSd: response.data.rdSd,
+        })
     } catch (error) {
         console.log(error.response);
         console.log(error.response.status);

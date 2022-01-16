@@ -14,8 +14,17 @@ const FormCity = ({onGet}) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        onGet(city.trim(), orderBy.trim(), ascOrDesc.trim(), maxPrice.trim(), minPrice.trim(), pets_choice.trim(),
-            minArea.trim(), maxArea.trim(), sqmBudget.trim())
+        onGet( {
+            city: city.trim(),
+            orderBy: orderBy.trim(),
+            ascOrDesc: ascOrDesc.trim(),
+            maxPrice: maxPrice.trim(),
+            minPrice: minPrice.trim(),
+            pets_choice: pets_choice.trim(),
+            minArea: minArea.trim(),
+            maxArea: maxArea.trim(),
+            sqmBudget: sqmBudget.trim()
+        })
     }
 
     return (

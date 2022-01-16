@@ -4,9 +4,10 @@ import FormLongLat from './Forms/FormLongLat';
 import FormCity from './Forms/FormCity';
 import FormPost from "./Forms/FormPost";
 import FormStats from "./Forms/FormStats";
-import FormPutId from "./Forms/FormPutId";
+import FormLocPut from  "./Forms/FormLocPut"
 
-function InputPanel({formToShow, onIdGet, onLocationGet, onCityPrefGet, onCityStatsGet, onPropertyPost, onIdPut}){
+
+function InputPanel({formToShow, onIdGet, onLocationGet, onCityPrefGet, onCityStatsGet, onPropertyPost, onIdPut, onLocationPut}){
     if (formToShow === '') {
         return (
             <div className="inputPanel">
@@ -21,7 +22,10 @@ function InputPanel({formToShow, onIdGet, onLocationGet, onCityPrefGet, onCitySt
             {formToShow === 'cityPref' && <FormCity onGet = {onCityPrefGet}/>}
             {formToShow === 'stats' && <FormStats onGet = {onCityStatsGet}/>}
             {formToShow === 'addProp' && <FormPost onGet = {onPropertyPost} />}
-            {formToShow === 'editId' && <FormPutId onGet = {FormPutId} />}
+            {formToShow === 'editId' && <FormPost onGet = {onIdPut} />}
+            {formToShow === 'editLoc' && <FormLocPut onGet = {onLocationPut} />}
+
+
         </div>
     )
 }

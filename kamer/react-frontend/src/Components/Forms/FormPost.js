@@ -16,7 +16,6 @@ const FormPost = ({onGet}) => {
     const [deposit, setDeposit] = React.useState('')
     const [descriptionTranslated, setDescriptionTranslated] = React.useState('')
     const [gender, setGender] = React.useState('')
-    const [isRoomActive, setIsRoomActive] = React.useState('')
     const [pageDescription, setPageDescription] = React.useState('')
     const [pageTitle, setPageTitle] = React.useState('')
     const [pets, setPets] = React.useState('')
@@ -126,7 +125,7 @@ const FormPost = ({onGet}) => {
             <label>Pets</label>
             <input type='text' placeholder='type pets' value={pets} onChange={(e) => {
     setPets(e.target.value)
-}}required={true}/>
+}}required={true} maxLength={3}/>
 
 
             <label>Roommates</label>
@@ -136,7 +135,7 @@ const FormPost = ({onGet}) => {
 
 
 
-            <input type='submit' value='Post Property'/>
+            <input type='submit' value='Save Changes'/>
         </form>
     )
 }
