@@ -14,10 +14,9 @@ const FormId = ({onGet}) => {
             <label>Id</label>
             <input type='text' placeholder='type id' value={id} onChange={(e) => {
                 setId(e.target.value)
-                console.log(id)
             }} required={true}/>
-            <button onClick={onSubmit} name="find" >Find Property</button>
-            <button onClick={onSubmit} name="del" >Delete Property</button>
+            <button onClick={onSubmit} name="find">Find Property</button>
+            <button onClick={onSubmit} name="del">Delete Property</button>
         </form>
     )
 }

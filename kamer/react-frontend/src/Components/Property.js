@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import MapBuilder from "./MapBuilder";
 
 import {BASE_URL} from "../App";
@@ -17,12 +17,15 @@ function Property({nav, setNav}) {
     //properties state
     const [properties, setProperties] = useState([])
 
+    const navigate = useNavigate();
 
     // `getProperties` will "watch" the `nav.curr` and update whenever it (nav.curr) changes
     useEffect(async () => {
         setLoading(true);
-        const {data, next, prev, count} = await getProperties(nav.curr);
+        const response = await getProperties(nav.curr);
+        const {data, next, prev, count} = response;
         setProperties(data);
+        console.log(data);
         setNav({
             ...nav,
             next: next,
@@ -125,6 +128,17 @@ function Property({nav, setNav}) {
         );
     }
 
+    /**
+     * When No Properties are found
+     * */
+    function NoProperties() {
+        return (
+            <div className="propDiv">
+                <li>No Properties Found</li>
+            </div>
+        )
+    }
+
     return (
         <div className="container">
 
@@ -133,7 +147,7 @@ function Property({nav, setNav}) {
             {loading ? <h1>Loading...</h1> : null} {/* if loading view loading */}
 
             <ul>
-                <Desc/>
+                {properties.length === 0 ? <NoProperties/> : <Desc/>}
             </ul>
         </div>
     )
@@ -175,7 +189,12 @@ export const getProperties = async (url) => {
         console.log(error.response);
         console.log(error.response.status);
         console.log(error.response.headers);
-        return null;
+        return ({
+            data: [],
+            next: null,
+            prev: null,
+            count: 0,
+        })
     }
 }
 

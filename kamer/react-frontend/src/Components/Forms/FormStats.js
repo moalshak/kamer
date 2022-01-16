@@ -14,7 +14,7 @@ const FormStats = ({onGet}) => {
             <input type='text' placeholder='City for which you want statistics' value={city} onChange={(e) => {
                 setCity(e.target.value)
             }} required={true}/>
-            <input type='submit' value='Find Property'/>
+            <button type='submit'>Find Property</button>
         </form>
     )
 }

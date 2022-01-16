@@ -7,6 +7,7 @@ import InputPanel from "./Components/InputPanel";
 import Detail from "./Components/Routes/Detail";
 import StatsModal from "./Components/StatsModal";
 import Edit from "./Components/Routes/Edit";
+import Page404 from "./Components/Routes/Page404";
 
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
@@ -72,6 +73,11 @@ function App() {
         }
     }
 
+    /**
+     * location query
+     * @param lat the latitude
+     * @param long the longitude
+     * */
     const onLocationGet = async (lat, long) => {
         const curr = `${BASE_URL}location/?format=json&latitude=${lat}&longitude=${long}`;
         setNav({
@@ -80,6 +86,11 @@ function App() {
         });
     }
 
+    /**
+     * City stats
+     *
+     * @param city the city call the api for
+     * */
     const onCityStatsGet = async (city) => {
         const data = await getCityStats(city);
         if (data != null) {
@@ -90,6 +101,7 @@ function App() {
         setShowModal(true);
     }
 
+    
     const onPropertyPost = async (details) => {
         await postProperty(`${BASE_URL}all/?format=json`, details)
     }
@@ -173,6 +185,7 @@ function App() {
                 }/>
                 <Route exact path="/property/:externalId" element={<Detail/>}/>
                 <Route exact path="/edit/:externalId" element={<Edit onGet={onIdPut}/>}/>
+                <Route path="/*" element={<Page404/>}/>
             </Routes>
         </Router>
     );

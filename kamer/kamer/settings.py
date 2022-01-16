@@ -146,7 +146,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'react-frontend', 'build', 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'react-frontend', 'build'), os.path.join(BASE_DIR, 'react-frontend', 'build', 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
@@ -166,7 +166,7 @@ LOGGING = {
         'default': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': '/home/mo/2021-Group13/kamer/logs/mylog.log',
+            'filename': '/home/salo/uni/2021-Group13/kamer/logs/mylog.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter':'standard',
@@ -174,7 +174,7 @@ LOGGING = {
         'request_handler': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': '/home/mo/2021-Group13/kamer/logs/django_request.log',
+            'filename': '/home/salo/uni/2021-Group13/kamer/logs/django_request.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter':'standard',

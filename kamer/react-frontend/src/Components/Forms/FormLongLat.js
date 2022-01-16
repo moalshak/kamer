@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 const FormLongLat = ({onGet}) => {
-    const [longitude, setLongitude] = React.useState('')
-    const [latitude, setLatitude] = React.useState('')
+    const [longitude, setLongitude] = useState('')
+    const [latitude, setLatitude] = useState('')
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -14,14 +14,12 @@ const FormLongLat = ({onGet}) => {
             <label>Latitude</label>
             <input type='text' placeholder='type latitude' value={latitude} onChange={(e) => {
                 setLatitude(e.target.value)
-                console.log(latitude)
             }} required={true}/>
             <label>Longitude</label>
             <input type='text' placeholder='type longitude' value={longitude} onChange={(e) => {
                 setLongitude(e.target.value)
-                console.log(longitude)
             }} required={true}/>
-            <input type='submit' value='Find Property'/>
+            <button type='submit'>Find Property</button>
         </form>
     )
 }
