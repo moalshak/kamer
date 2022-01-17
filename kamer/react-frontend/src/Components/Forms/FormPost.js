@@ -1,6 +1,15 @@
 import React, {useState} from 'react'
 
+/**
+ * This form gets all the information necessary information to post a new property in the database
+ * @param onGet this function is in charge of posting the new property
+ * @return {JSX.Element} the form we want to display
+ * @constructor
+ */
 const FormPost = ({onGet}) => {
+    /**
+     * The state of all the parameters we want to update
+     */
     const [externalId, setExternalId] = useState('')
     const [areaSqm, setAreaSqm] = useState('')
     const [city, setCity] = useState('')
@@ -20,7 +29,10 @@ const FormPost = ({onGet}) => {
     const [pageTitle, setPageTitle] = useState('')
     const [pets, setPets] = useState('')
     const [roommates, setRoommates] = useState('')
-
+    /**
+     * This function listens to the click of the button and calls the function to post  a properties
+     * @param e the listener
+     */
     const onSubmit = (e) => {
         e.preventDefault()
         onGet({
@@ -46,7 +58,9 @@ const FormPost = ({onGet}) => {
             "roommates": roommates.trim(),
         })
     }
-
+    /**
+     * The JSX of the form
+     */
     return (
         <form className='form-control' onSubmit={onSubmit}>
 

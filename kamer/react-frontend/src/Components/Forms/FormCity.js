@@ -1,6 +1,16 @@
 import React from 'react'
 
+/**
+ *  This form gets all the parameter that the user would want to search properties by
+ * @param onGet This function is used to set the values of the research that the user wants
+ * @return {JSX.Element} the form that we want to display
+ * @constructor
+ */
 const FormCity = ({onGet}) => {
+
+    /**
+     * The state of all the Parameters we want to research
+     */
     const [city, setCity] = React.useState('')
     const [orderBy, setOrderBy] = React.useState('')
     const [ascOrDesc, setAscOrDesc] = React.useState('')
@@ -11,7 +21,10 @@ const FormCity = ({onGet}) => {
     const [maxArea, setMaxArea] = React.useState('')
     const [sqmBudget, setSqmBudget] = React.useState('')
 
-
+    /**
+     * This function listens to the click of the button and calls the research of the appropriate properties
+     * @param e the listener
+     */
     const onSubmit = (e) => {
         e.preventDefault();
         onGet({
@@ -26,7 +39,9 @@ const FormCity = ({onGet}) => {
             sqmBudget: sqmBudget.trim()
         })
     }
-
+    /**
+     * JSX of the form
+     */
     return (
         <form className='form-control' onSubmit={onSubmit}>
             <label>City</label>

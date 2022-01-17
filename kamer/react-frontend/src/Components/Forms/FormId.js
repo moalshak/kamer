@@ -1,14 +1,25 @@
 import React, {useState} from 'react';
 
+/**
+ * This form gets the id of the property that the user wants to either find or delete
+ * @param onGet the function that is going to use the input id to either delete the property
+ * @return {JSX.Element}the form that we want to display
+ * @constructor
+ */
 const FormId = ({onGet}) => {
     const [id, setId] = useState('')
-
+    /**
+     * This function listens to the click of the button and calls the research or the deletion of a property
+     * @param event the listener
+     */
     const onSubmit = (event) => {
         event.preventDefault()
         const opt = event.target.name; // option -> delete or find
         onGet(id.trim(), opt)
     }
-
+    /**
+     * JSX of the form
+     */
     return (
         <form className='form-control' onSubmit={onSubmit}>
             <label>Id</label>
