@@ -6,7 +6,9 @@ import FormPost from "./Forms/FormPost";
 import FormStats from "./Forms/FormStats";
 import FormLocPut from  "./Forms/FormLocPut"
 
-
+/**
+ * Input Panel component
+ * */
 function InputPanel({formToShow, onIdGet, onLocationGet, onCityPrefGet, onCityStatsGet, onPropertyPost, onIdPut, onLocationPut}){
     if (formToShow === '') {
         return (
@@ -16,6 +18,7 @@ function InputPanel({formToShow, onIdGet, onLocationGet, onCityPrefGet, onCitySt
         );
     }
     return (
+        //assigns the following buttons the appropriate forms to be displayed when clicked
         <div className="inputPanel">
             {formToShow === 'id' && <FormId onGet = {onIdGet} />}
             {formToShow === 'location' && <FormLongLat onGet = {onLocationGet} />}

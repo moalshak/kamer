@@ -1,6 +1,12 @@
 import React from "react";
 
-
+/**
+ * Stats pop up component displaying statistical info about a given city
+ *
+ * @param onClose Checks to see if the pop-up component should be closed
+ * @param State the data containing statistical information about a city
+ * @return the pop up component that will be displayed
+ */
 function StatsModal({onClose, state}){
 
     return (

@@ -2,7 +2,6 @@ import axios from 'axios';
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import MapBuilder from "./MapBuilder";
-
 import {BASE_URL} from "../App";
 
 /**
@@ -218,7 +217,7 @@ export const delProperty = async (url, payload) => {
 
 
 /**
- * Does a post request to the sepecified url aka endpoints given a payload
+ * Does a post request to the specified url aka endpoints given a payload
  *
  * @param url the endpoint to request to
  * @param payload the payload to send with the request
@@ -238,7 +237,7 @@ export const postProperty = async (url, payload) => {
 }
 
 /**
- * Does a put request to the sepecified url aka endpoints given a payload
+ * Does a put request to the id endpoint
  *
  * @param url the endpoint to request to
  * @param payload the payload to send with the request
@@ -257,6 +256,14 @@ export const putId = async (url, payload) => {
     }
 }
 
+/**
+ * Does a put request to the location endpoint
+ *
+ * @param url the endpoint to request to
+ * @param payload the payload to send with the request
+ *
+ * @returns the response data
+ * */
 export const putLocation = async (url, payload) => {
     try {
         const response = await axios.put(url, payload);
@@ -269,7 +276,13 @@ export const putLocation = async (url, payload) => {
     }
 }
 
-
+/**
+ * Does a get request on the stats endpoint
+ *
+ * @param city the city you want the view the stats for
+ *
+ * @returns the response data
+ * */
 export const getCityStats = async (city) => {
     try {
         const url = `${BASE_URL}city/stats/${city}/?format=json`
