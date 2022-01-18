@@ -3,9 +3,7 @@
 ## Starting M2 API Implementation
 
 # How To Install
+./install.sh
 
-pip install -r requierments.txt
-
-# INSTALL NODEJS Version 16.13.2 & NPM
-
-npm install
+# How to start
+./start.sh
