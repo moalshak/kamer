@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { BASE_URL } from '../../App';
 
 /**
  * This form gets the name of the city that we want to see the stats of
@@ -25,6 +26,7 @@ const FormStats = ({onGet}) => {
             <input type='text' placeholder='City for which you want statistics' value={city} onChange={(e) => {
                 setCity(e.target.value)
             }} required={true}/>
+            <a href={`${BASE_URL}city/stats/${city}/?format=csv`}> Download CSV </a>
             <button type='submit'>Find Property</button>
         </form>
     )

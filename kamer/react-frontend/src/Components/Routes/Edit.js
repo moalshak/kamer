@@ -1,7 +1,7 @@
-import {memo, useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {getProperties} from "../Property";
-import {BASE_URL} from "../../App";
+import { memo, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { BASE_URL } from "../../App";
+import { getProperties } from "../Property";
 
 /**
  * @returns a form to edit the clicked property
@@ -167,7 +167,7 @@ function Edit({onGet}) {
                 }} required={true} type="number"/>
 
                 <label>Description Translated</label>
-                <input type='text' placeholder='type descriptionTranslated' value={descriptionTranslated}
+                <textarea type='text' placeholder='type descriptionTranslated' value={descriptionTranslated}
                        onChange={(e) => {
                            setDescriptionTranslated(e.target.value)
                        }} required={true}/>

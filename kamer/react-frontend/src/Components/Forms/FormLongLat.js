@@ -33,7 +33,7 @@ const FormLongLat = ({onGet}) => {
             <input type='text' placeholder='type longitude' value={longitude} onChange={(e) => {
                 setLongitude(e.target.value)
             }} required={true}/>
-            <a href={`${BASE_URL}location/?latitude=${latitude}&longitude=${longitude}&format=csv`}> Download CSV </a>
+            <a href={`${BASE_URL}location/?latitude=${latitude}&longitude=${longitude}&format=csv&page_size=0`}> Download CSV </a>
             <button type='submit'>Find Property</button>
         </form>
     )
