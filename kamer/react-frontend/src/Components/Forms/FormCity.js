@@ -12,7 +12,7 @@ const FormCity = ({onGet}) => {
      * The state of all the Parameters we want to research
      */
     const [city, setCity] = React.useState('')
-    // const [N, setN] = React.useState('')
+    const [N, setN] = React.useState('')
     const [orderBy, setOrderBy] = React.useState('')
     const [ascOrDesc, setAscOrDesc] = React.useState('')
     const [maxPrice, setMaxPrice] = React.useState('')
@@ -30,7 +30,7 @@ const FormCity = ({onGet}) => {
         e.preventDefault();
         onGet({
             city: city.trim(),
-            // N:city.trim(),
+            N:N.trim(),
             orderBy: orderBy.trim(),
             ascOrDesc: ascOrDesc.trim(),
             maxPrice: maxPrice.trim(),
@@ -92,10 +92,10 @@ const FormCity = ({onGet}) => {
                 setSqmBudget(e.target.value)
             }}/>
 
-            {/* <label>Number of properties displayed </label>
+            <label>Number of properties displayed </label>
             <input type='text' placeholder='Number of Results' value={N} onChange={(e) => {
                 setN(e.target.value)
-            }} required={true} type="number" min="0" /> */}
+            }} required={true} type="number" min="0" />
 
             <button type='submit'>Find Property</button>
         </form>

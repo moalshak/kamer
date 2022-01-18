@@ -131,9 +131,9 @@ function App() {
      */
     const onCityPrefGet = async (pref) => {
         let curr = `${BASE_URL}city/${pref.city}/?format=json`
-        // if(pref.N  !== ''){
-        //     curr += `&N=${pref.N}`;
-        // }
+        if(pref.N  !== ''){
+            curr += `&N=${pref.N}`;
+        }
         if (pref.orderBy !== '') {
             curr += `&orderBy=${pref.orderBy}`;
         }
