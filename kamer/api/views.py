@@ -1,35 +1,42 @@
 # Create your views here.
-import statistics
 import csv
+import statistics
 from decimal import Decimal as D
 
 from django.db.models import Max
 from django.shortcuts import render
 from django.template.defaultfilters import length
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.decorators import api_view, renderer_classes, permission_classes, authentication_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+    renderer_classes,
+)
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework_csv.renderers import CSVRenderer
 
 from .models import Property
 from .serializers import PropertySerializer, StatsSerializer
 
+PAGE_SIZE_ = 10
+
 
 def api_home_page(request):
-    return render(request, 'api/api_home.html')
+    return render(request, "api/api_home.html")
 
 
-'''
+"""
     A Class based view to view the properties in pages
     dependent on the request type:
     GET : returns all properties in database
     POST: adds a property to the database
-'''
+"""
 
 
 class PropertiesListView(ListAPIView):
@@ -44,12 +51,13 @@ class PropertiesListView(ListAPIView):
 
     def post(self, request, *args, **kwargs):
         return add_property(request)
+
     ####################################################
 
 
-'''
+"""
     adds a property to the database using the request.data
-'''
+"""
 
 
 def add_property(request):
@@ -64,16 +72,16 @@ def add_property(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-'''
+"""
     using an (existent) externalId either:
         returns the property (GET)
         updates the property (PUT)
         deletes the property (DELETE)
-'''
+"""
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-@renderer_classes((JSONRenderer, BrowsableAPIRenderer,  CSVRenderer))
+@api_view(["GET", "PUT", "DELETE"])
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer, CSVRenderer))
 @authentication_classes((SessionAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated,))
 def property_by_id(request, externalId, format=None):
@@ -83,29 +91,29 @@ def property_by_id(request, externalId, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
     # TODO: only allow an the PUT if the renter of the this property is the requester (by adding in the database
     #  an owner field and populating it) then uncomment below
-    '''
+    """
         requester = request.user
         if request.method != 'GET' and p.owner != requester:
             return Response({'Response':"You do not have permission to edit that"})
-    '''
-    if request.method == 'GET':
+    """
+    if request.method == "GET":
         serializer = PropertySerializer(p)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == "PUT":
         serializer = PropertySerializer(p, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == "DELETE":
         p.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-'''
+"""
     extracts the longitude & latitude from the url (query)
     then calls the helper function 
-'''
+"""
 
 
 class get_propertyByLocation(ListAPIView):
@@ -116,9 +124,11 @@ class get_propertyByLocation(ListAPIView):
 
     def get_queryset(self):
         try:
-            latitude = self.request.GET.get('latitude', '0')
-            longitude = self.request.GET.get('longitude', '0')
-            return Property.objects.filter(latitude=latitude).filter(longitude=longitude)
+            latitude = self.request.GET.get("latitude", "0")
+            longitude = self.request.GET.get("longitude", "0")
+            return Property.objects.filter(latitude=latitude).filter(
+                longitude=longitude
+            )
         except Property.DoesNotExist:
             return None
 
@@ -140,8 +150,7 @@ class get_propertyByLocation(ListAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-
-'''
+"""
     given a city returns all properties that match the query parameters from the url
     1. The order : Ascending or Descending
     2. Rent price range: min, max or both
@@ -149,19 +158,19 @@ class get_propertyByLocation(ListAPIView):
     4. Area : min, max or both
     5. Square Meter budget: max rent price per square meter maxPrice/maxArea
     6. N : number of properties wanted to return Default is 10
-'''
+"""
 
-'''
+"""
     returns the stats of a given city
-'''
+"""
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
 @authentication_classes((SessionAuthentication, TokenAuthentication))
 @permission_classes((IsAuthenticated,))
 def stats(request, city, format=None):
-    if request.method == 'GET':
+    if request.method == "GET":
         p = Property.objects.filter(city=city)
 
         len = length(p)
@@ -179,18 +188,26 @@ def stats(request, city, format=None):
             except TypeError:
                 len = len - 1
                 pass
+        if len == 0:
+            len = 1
         rent.sort()
         deposit.sort()
 
-        stats = Stats(rcMean=float(rcSum) / len, rdMean=float(rdSum) / len, rcMedian=rent[int(len / 2)],
-                      rdMedian=deposit[int(len / 2)], rcSd=statistics.stdev(rent), rdSd=statistics.stdev(deposit))
+        stats = Stats(
+            rcMean=float(rcSum) / len,
+            rdMean=float(rdSum) / len,
+            rcMedian=rent[int(len / 2)],
+            rdMedian=deposit[int(len / 2)],
+            rcSd=statistics.stdev(rent),
+            rdSd=statistics.stdev(deposit),
+        )
         serializer = StatsSerializer(stats)
         return Response(serializer.data)
 
 
-'''
+"""
     represents the stats needed for the city
-'''
+"""
 
 
 class Stats:
@@ -203,9 +220,9 @@ class Stats:
         self.rdSd = rdSd
 
 
-'''
+"""
     Pagination view for the properties from /city/
-'''
+"""
 
 
 class CityPrefListView(ListAPIView):
@@ -220,54 +237,62 @@ class CityPrefListView(ListAPIView):
     def get_queryset(self):
         # each parameter has to have an except since it can also
         # not be given in the url aka KeyError.
-        #TODO check if we are receiving the parameters
-        city = self.kwargs['city']
+        # TODO check if we are receiving the parameters
+        city = self.kwargs["city"]
 
         # Order by :: Default : rent
-        orderBY = self.request.GET.get('orderBy', 'rent')
+        orderBY = self.request.GET.get("orderBy", "rent")
 
         # Ascending or Descending :: Default : Ascending
 
-        ascOrDesc = self.request.GET.get('ascOrDesc', 'ASC')
+        ascOrDesc = self.request.GET.get("ascOrDesc", "ASC")
+
+        N = self.request.GET.get("N", 10)
+        PageNumberPagination.page_size = N
 
         # Price Range :: Default : 1000
         try:
-            defaultMaxPrice = Property.objects.aggregate(Max('rent'))['rent__max']
+            defaultMaxPrice = Property.objects.aggregate(Max("rent"))["rent__max"]
         except KeyError:
             defaultMaxPrice = 1000
 
         # Min Price :: Default 0
-        minPrice = D(self.request.GET.get('minPrice', 0))
+        minPrice = D(self.request.GET.get("minPrice", 0))
 
         # Max Price :: Default : defaultMaxPrice
-        maxPrice = D(self.request.GET.get('maxPrice', defaultMaxPrice))
+        maxPrice = D(self.request.GET.get("maxPrice", defaultMaxPrice))
 
         # Pets :: Default : %
-        pets_choice = self.request.GET.get('pets', '%')
+        pets_choice = self.request.GET.get("pets", "%")
 
         # Area :: Default : 1000
         try:
-            defaultMaxArea = Property.objects.aggregate(Max('areaSqm'))['areaSqm__max']
+            defaultMaxArea = Property.objects.aggregate(Max("areaSqm"))["areaSqm__max"]
         except KeyError:
             defaultMaxArea = 1000
 
         # min area :: Default : 0
-        minArea = int(self.request.GET.get('minArea', 0))
+        minArea = int(self.request.GET.get("minArea", 0))
 
         # min area :: Default : defaultMaxArea
-        maxArea = int(self.request.GET.get('maxArea', defaultMaxArea))
+        maxArea = int(self.request.GET.get("maxArea", defaultMaxArea))
 
         # sqmBudget :: Default : defaultMaxPrice / defaultMaxArea
-        sqmBudget = D(self.request.GET.get('sqmBudget', defaultMaxPrice / defaultMaxArea))
+        sqmBudget = D(
+            self.request.GET.get("sqmBudget", defaultMaxPrice * defaultMaxArea)
+        )
 
-        query = f"SELECT * FROM api_property    " \
-                f"WHERE city LIKE '{city}' " \
-                f"AND areaSqm BETWEEN {minArea} AND {maxArea} " \
-                f"AND rent BETWEEN {minPrice} AND {maxPrice} " \
-                f"AND pets LIKE '{pets_choice}' " \
-                f"AND rent / areaSqm <= {sqmBudget} " \
-                f" ORDER BY {orderBY} {ascOrDesc} "
+        query = (
+            f"SELECT * FROM api_property    "
+            f"WHERE city LIKE '{city}' "
+            f"AND areaSqm BETWEEN {minArea} AND {maxArea} "
+            f"AND rent BETWEEN {minPrice} AND {maxPrice} "
+            f"AND pets LIKE '{pets_choice}' "
+            f"AND rent / areaSqm <= {sqmBudget} "
+            f" ORDER BY {orderBY} {ascOrDesc} "
+        )
 
         # TODO sqm budget default is retarded
         return Property.objects.raw(query)
+
     ####################################################

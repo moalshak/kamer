@@ -1,13 +1,13 @@
 import axios from "axios";
-import React, {useState} from "react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ControlPanel from "./Components/ControlPanel";
-import Property, {delProperty, getCityStats, postProperty, putId, putLocation} from "./Components/Property";
 import InputPanel from "./Components/InputPanel";
+import Property, { delProperty, getCityStats, postProperty, putId, putLocation } from "./Components/Property";
 import Detail from "./Components/Routes/Detail";
-import StatsModal from "./Components/StatsModal";
 import Edit from "./Components/Routes/Edit";
 import Page404 from "./Components/Routes/Page404";
+import StatsModal from "./Components/StatsModal";
 
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
@@ -60,17 +60,27 @@ function App() {
      * @param id the id of the property
      * @param opt the option : delete or find
      * */
-    const onIdGet = async (id, opt) => {
-        if (opt === 'find') {
-            const curr = `${BASE_URL}id/${id}/?format=json`;
-            setNav({
-                ...nav,
-                curr: curr,
+    const onIdGet = async (id, opt, csvChecked) => {
+        let format = (csvChecked === false) ? 'json' : 'csv';
+        if(format === 'json'){
+            if (opt === 'find') {
+                const curr = `${BASE_URL}id/${id}/?format=${format}`;
+                setNav({
+                    ...nav,
+                    curr: curr,
+                });
+            } else if (opt === 'del') {
+                const curr = `${BASE_URL}id/${id}/`;
+                await delProperty(curr, {});
+            }
+        } else {
+            axios({
+                method: 'GET',
+                url: `${BASE_URL}id/${id}/?format=${format}`,
+            }).then((res) => {
+                console.log(res.data);
             });
-        } else if (opt === 'del') {
-            const curr = `${BASE_URL}id/${id}/`;
-            await delProperty(curr, {});
-        }
+        }  
     }
 
     /**
@@ -121,6 +131,9 @@ function App() {
      */
     const onCityPrefGet = async (pref) => {
         let curr = `${BASE_URL}city/${pref.city}/?format=json`
+        // if(pref.N  !== ''){
+        //     curr += `&N=${pref.N}`;
+        // }
         if (pref.orderBy !== '') {
             curr += `&orderBy=${pref.orderBy}`;
         }

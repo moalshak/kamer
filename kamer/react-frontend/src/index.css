@@ -377,3 +377,13 @@ textarea {
     font-family: "OpenSans", sans-serif;
     font-size: 1rem;
 }
+
+#dropdown {
+    width:210px;
+    height: 40px;
+}
+
+#dropdown option{
+    width:150px;  
+     
+  }

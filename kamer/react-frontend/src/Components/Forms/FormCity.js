@@ -2,6 +2,7 @@ import React from 'react'
 
 const FormCity = ({onGet}) => {
     const [city, setCity] = React.useState('')
+    // const [N, setN] = React.useState('')
     const [orderBy, setOrderBy] = React.useState('')
     const [ascOrDesc, setAscOrDesc] = React.useState('')
     const [maxPrice, setMaxPrice] = React.useState('')
@@ -16,6 +17,7 @@ const FormCity = ({onGet}) => {
         e.preventDefault();
         onGet({
             city: city.trim(),
+            // N:city.trim(),
             orderBy: orderBy.trim(),
             ascOrDesc: ascOrDesc.trim(),
             maxPrice: maxPrice.trim(),
@@ -33,14 +35,19 @@ const FormCity = ({onGet}) => {
             <input type='text' placeholder='type city' value={city} onChange={(e) => {
                 setCity(e.target.value)
             }} required={true}/>
+            
             <label>Order By</label>
-            <input type='text' placeholder='type orderBy' value={orderBy} onChange={(e) => {
-                setOrderBy(e.target.value)
-            }}/>
+            <select  name="dropdown" id="dropdown" value={orderBy} onChange={(e) => {setOrderBy(e.target.value)}}>
+                <option value="Rent">Rent</option>
+                <option value="areaSqm">Area</option>
+            </select> 
+
             <label>Asc Or Desc</label>
-            <input type='text' placeholder='type Asc Or Desc' value={ascOrDesc} onChange={(e) => {
-                setAscOrDesc(e.target.value)
-            }}/>
+            <select  name="dropdown" id="dropdown" value={ascOrDesc} onChange={(e) => {setAscOrDesc(e.target.value)}}>
+                <option value="Asc">Ascending</option>
+                <option value="Desc">Descending</option>
+            </select>            
+
             <label>Max Price</label>
             <input type='text' placeholder='type Max Price' value={maxPrice} onChange={(e) => {
                 setMaxPrice(e.target.value)
@@ -57,14 +64,24 @@ const FormCity = ({onGet}) => {
             <input type='text' placeholder='type Min Area' value={minArea} onChange={(e) => {
                 setMinArea(e.target.value)
             }}/>
+
             <label>Pets</label>
-            <input type='text' placeholder='type pets_choice' value={pets_choice} onChange={(e) => {
-                setPets_choice(e.target.value)
-            }}/>
+            <select  name="dropdown" id="dropdown" value={pets_choice} onChange={(e) => {setPets_choice(e.target.value)}}>
+                <option value="%">No Preference</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select> 
+
             <label>sqmBudget</label>
             <input type='text' placeholder='type sqmBudget' value={sqmBudget} onChange={(e) => {
                 setSqmBudget(e.target.value)
             }}/>
+
+            {/* <label>Number of properties displayed </label>
+            <input type='text' placeholder='Number of Results' value={N} onChange={(e) => {
+                setN(e.target.value)
+            }} required={true} type="number" min="0" /> */}
+
             <button type='submit'>Find Property</button>
         </form>
     )

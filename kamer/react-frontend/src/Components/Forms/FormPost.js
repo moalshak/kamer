@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 const FormPost = ({onGet}) => {
     const [externalId, setExternalId] = useState('')
@@ -49,8 +49,6 @@ const FormPost = ({onGet}) => {
 
     return (
         <form className='form-control' onSubmit={onSubmit}>
-
-
             <label>ExternalID</label>
             <input type='text' placeholder='type ExternalID' value={externalId} onChange={(e) => {
                 setExternalId(e.target.value)
@@ -138,15 +136,15 @@ const FormPost = ({onGet}) => {
 
 
             <label>Pets</label>
-            <input type='text' placeholder='type pets' value={pets} onChange={(e) => {
-                setPets(e.target.value)
-            }} required={true} maxLength={3}/>
-
+            <select  name="dropdown" id="dropdown" value={pets} onChange={(e) => {setPets(e.target.value)}} required={true}>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select> 
 
             <label>Roommates</label>
             <input placeholder='type roommates' value={roommates} onChange={(e) => {
                 setRoommates(e.target.value)
-            }} required={true} type="number"/>
+            }} required={true} type="number" min="0" />
 
 
             <button type='submit'>Save Changes</button>
