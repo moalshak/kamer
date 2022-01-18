@@ -6,7 +6,7 @@ sudo apt-get update -y && sudo apt-get upgrade -y
 # Install node version 16
 
 #install curl
-sudo apt-get install curl
+sudo apt-get install curl -y
 # install node version 16 && npm
 curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 sudo apt-get install nodejs -y
