@@ -99,6 +99,7 @@ const FormCity = ({onGet}) => {
             <label>Number of properties </label>
             <input type='text' placeholder='Number of Results' value={page_size} onChange={(e) => {
                 setPage_size(e.target.value)
+                console.log(e.target.value)
             }} required={true} type="number" min="0" />
 
             <a href={`${fuck(validate(city, page_size, orderBy, ascOrDesc, maxPrice, minPrice, pets_choice, minArea, maxArea, sqmBudget), "csv")}`}> Download CSV </a>

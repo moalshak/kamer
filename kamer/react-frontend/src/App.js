@@ -179,8 +179,8 @@ function App() {
 
 export function fuck(pref, format) {
     let curr = `${BASE_URL}city/${pref.city}/?&format=${format}`;
-    if (pref.N !== '') {
-        curr += `&N=${pref.N}`;
+    if (pref.page_size !== '') {
+        curr += `&page_size=${pref.page_size}`;
     }
     if (pref.orderBy !== '') {
         curr += `&orderBy=${pref.orderBy}`;
