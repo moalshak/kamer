@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# in the pdf it was mentioned that the script will be ran as root
+#  this makes the sudo's redundant, but just in case
+#
+
 # update and upgrade the system
 sudo apt-get update -y && sudo apt-get upgrade -y
 
