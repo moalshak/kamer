@@ -37,6 +37,28 @@ def api_home_page(request):
 """
 
 
+class Pagination(PageNumberPagination):
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+    def get_page_size(self, request):
+        if self.page_size_query_param:
+            page_size = min(
+                int(
+                    request.query_params.get(self.page_size_query_param, self.page_size)
+                ),
+                self.max_page_size,
+            )
+            if page_size > 0:
+                return page_size
+            elif page_size == 0:
+                return None
+            else:
+                page_size = 10
+
+        return self.page_size
+
+
 class PropertiesListView(ListAPIView):
     ##################################################
     # DO NOT MODIFY THIS HAS TO BE EXACTLY LIKE THIS #
@@ -45,8 +67,7 @@ class PropertiesListView(ListAPIView):
     serializer_class = PropertySerializer
     authentication_classes = (TokenAuthentication, SessionAuthentication)
     permission_classes = (AllowAny,)
-    pagination_class = PageNumberPagination
-    PageNumberPagination.page_size = 10
+    pagination_class = Pagination
 
     def post(self, request, *args, **kwargs):
         return add_property(request)
@@ -84,7 +105,6 @@ def add_property(request):
 @authentication_classes((SessionAuthentication, TokenAuthentication))
 @permission_classes((AllowAny,))
 def property_by_id(request, externalId, format=None):
-    PageNumberPagination.page_size = 10
     try:
         p = Property.objects.get(externalId=externalId)
     except Property.DoesNotExist:
@@ -120,8 +140,7 @@ class get_propertyByLocation(ListAPIView):
     serializer_class = PropertySerializer
     authentication_classes = (TokenAuthentication, SessionAuthentication)
     permission_classes = (AllowAny,)
-    pagination_class = PageNumberPagination
-    PageNumberPagination.page_size = 10
+    pagination_class = Pagination
 
     def get_queryset(self):
         try:
@@ -233,7 +252,7 @@ class CityPrefListView(ListAPIView):
     serializer_class = PropertySerializer
     authentication_classes = (TokenAuthentication, SessionAuthentication)
     permission_classes = (AllowAny,)
-    pagination_class = PageNumberPagination
+    pagination_class = Pagination
 
     def get_queryset(self):
         # each parameter has to have an except since it can also
@@ -248,8 +267,8 @@ class CityPrefListView(ListAPIView):
 
         ascOrDesc = self.request.GET.get("ascOrDesc", "ASC")
 
-        N = self.request.GET.get("N", 10)
-        PageNumberPagination.page_size = N
+        # N = self.request.GET.get("N", 10)
+        # PageNumberPagination.page_size = N
 
         # Price Range :: Default : 1000
         try:

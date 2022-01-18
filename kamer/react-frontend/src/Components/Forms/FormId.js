@@ -1,6 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { CSVLink } from "react-csv";
+import React, { useState } from 'react';
 import { BASE_URL } from '../../App';
 
 /**
@@ -12,7 +10,6 @@ import { BASE_URL } from '../../App';
 const FormId = ({onGet}) => {
     const [id, setId] = useState('')
     const [csvChecked, setCsvChecked] = useState(false);
-    const [data, setData] = useState('');
 
     /**
      * This function listens to the click of the button and calls the research or the deletion of a property
@@ -24,30 +21,6 @@ const FormId = ({onGet}) => {
         onGet(id.trim(), opt)
     }
 
-    const [update, setUpdate] = useState(false);
-
-    useEffect(async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}id/${id}/?format=csv`);
-            console.log(response.data);
-            setData(response.data);
-            
-            // console.log(data);
-            /*axios({
-                method: 'GET',
-                url: `${BASE_URL}id/${id}/?format=csv`,
-            }).then((res) => {
-                console.log(res.data);
-                setData(res.data);room-1686123
-            });*/
-        } catch (error) {
-            console.log(error);
-            
-            console.log(`${id} does not exist`);
-        }
-    }, [update]);
-
-    
 
     /**
      * JSX of the form
@@ -59,16 +32,8 @@ const FormId = ({onGet}) => {
                 setId(e.target.value)
             }} required={true}/>
             
-            <label>Do you want CSV output</label>
-            <input type='checkbox' name="csv" onChange={() => setCsvChecked(!csvChecked)}/>
-            {/*<a href={`${BASE_URL}id/${id}/?format=csv`}> Download CSV </a>*/}
-            <CSVLink onClick={() => {
-                setUpdate(true)
-                }}
-                data={data}
-                >
-                Download me
-            </CSVLink>
+            <a href={`${BASE_URL}id/${id}/?format=csv`}> Download CSV </a>
+        
             <button onClick={onSubmit} name="find">Find Property</button>
             <button onClick={onSubmit} name="del">Delete Property</button>
         </form>

@@ -130,34 +130,7 @@ function App() {
      * @param pref an object that contains preferences
      */
     const onCityPrefGet = async (pref) => {
-        let curr = `${BASE_URL}city/${pref.city}/?format=json`
-        if(pref.N  !== ''){
-            curr += `&N=${pref.N}`;
-        }
-        if (pref.orderBy !== '') {
-            curr += `&orderBy=${pref.orderBy}`;
-        }
-        if (pref.ascOrDesc !== '') {
-            curr += `&ascOrDesc=${pref.ascOrDesc}`;
-        }
-        if (pref.maxPrice !== '') {
-            curr += `&maxPrice=${pref.maxPrice}`;
-        }
-        if (pref.minPrice !== '') {
-            curr += `&minPrice=${pref.minPrice}`;
-        }
-        if (pref.pets_choice !== '') {
-            curr += `&pets=${pref.pets_choice}`
-        }
-        if (pref.minArea !== '') {
-            curr += `&minArea=${pref.minArea}`;
-        }
-        if (pref.maxArea !== '') {
-            curr += `&maxArea=${pref.maxArea}`;
-        }
-        if (pref.sqmBudget !== '') {
-            curr += `&sqmBudget=${pref.sqmBudget}`;
-        }
+        let curr = fuck(pref, "json");
         setNav({
             ...nav,
             curr: curr,
@@ -204,5 +177,37 @@ function App() {
     );
 }
 
+export function fuck(pref, format) {
+    let curr = `${BASE_URL}city/${pref.city}/?&format=${format}`;
+    if (pref.N !== '') {
+        curr += `&N=${pref.N}`;
+    }
+    if (pref.orderBy !== '') {
+        curr += `&orderBy=${pref.orderBy}`;
+    }
+    if (pref.ascOrDesc !== '') {
+        curr += `&ascOrDesc=${pref.ascOrDesc}`;
+    }
+    if (pref.maxPrice !== '') {
+        curr += `&maxPrice=${pref.maxPrice}`;
+    }
+    if (pref.minPrice !== '') {
+        curr += `&minPrice=${pref.minPrice}`;
+    }
+    if (pref.pets_choice !== '') {
+        curr += `&pets=${pref.pets_choice}`;
+    }
+    if (pref.minArea !== '') {
+        curr += `&minArea=${pref.minArea}`;
+    }
+    if (pref.maxArea !== '') {
+        curr += `&maxArea=${pref.maxArea}`;
+    }
+    if (pref.sqmBudget !== '') {
+        curr += `&sqmBudget=${pref.sqmBudget}`;
+    }
+    return curr;
+}
 
 export default App;
+

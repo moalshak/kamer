@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { fuck } from "../../App"
 /**
  *  This form gets all the parameter that the user would want to search properties by
  * @param onGet This function is used to set the values of the research that the user wants
@@ -12,7 +12,7 @@ const FormCity = ({onGet}) => {
      * The state of all the Parameters we want to research
      */
     const [city, setCity] = React.useState('')
-    const [N, setN] = React.useState('')
+    const [page_size, setPage_size] = React.useState('')
     const [orderBy, setOrderBy] = React.useState('')
     const [ascOrDesc, setAscOrDesc] = React.useState('')
     const [maxPrice, setMaxPrice] = React.useState('')
@@ -28,9 +28,13 @@ const FormCity = ({onGet}) => {
      */
     const onSubmit = (e) => {
         e.preventDefault();
-        onGet({
+        onGet(validate(city, page_size, orderBy, ascOrDesc, maxPrice, minPrice, pets_choice, minArea, maxArea, sqmBudget))
+    }
+
+    function validate(city, page_size, orderBy, ascOrDesc, maxPrice, minPrice, pets_choice, minArea, maxArea, sqmBudget) {
+        return {
             city: city.trim(),
-            N:N.trim(),
+            page_size: page_size.trim(),
             orderBy: orderBy.trim(),
             ascOrDesc: ascOrDesc.trim(),
             maxPrice: maxPrice.trim(),
@@ -39,7 +43,7 @@ const FormCity = ({onGet}) => {
             minArea: minArea.trim(),
             maxArea: maxArea.trim(),
             sqmBudget: sqmBudget.trim()
-        })
+        }
     }
     /**
      * JSX of the form
@@ -93,9 +97,11 @@ const FormCity = ({onGet}) => {
             }} type="number" min="0"/>
 
             <label>Number of properties </label>
-            <input type='text' placeholder='Number of Results' value={N} onChange={(e) => {
-                setN(e.target.value)
+            <input type='text' placeholder='Number of Results' value={page_size} onChange={(e) => {
+                setPage_size(e.target.value)
             }} required={true} type="number" min="0" />
+
+            <a href={`${fuck(validate(city, page_size, orderBy, ascOrDesc, maxPrice, minPrice, pets_choice, minArea, maxArea, sqmBudget), "csv")}`}> Download CSV </a>
 
             <button type='submit'>Find Property</button>
         </form>
@@ -103,3 +109,5 @@ const FormCity = ({onGet}) => {
 }
 
 export default FormCity
+
+
