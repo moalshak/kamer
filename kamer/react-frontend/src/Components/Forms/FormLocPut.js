@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
 
+/**
+ * This form gets all the information necessary information to update a range of properties depending on their latitude and longitude
+ * @param onGet the function in charge of making all these changes
+ * @return {JSX.Element} the form that we want to display
+ * @constructor
+ */
 const FormPost = ({onGet}) => {
+    /**
+     * The state of all the parameters we want to update
+     */
     const [areaSqm, setAreaSqm] = useState('')
     const [city, setCity] = useState('')
     const [coverImageUrl, setCoverImageUrl] = useState('')
@@ -19,7 +28,10 @@ const FormPost = ({onGet}) => {
     const [pageTitle, setPageTitle] = useState('')
     const [pets, setPets] = useState('')
     const [roommates, setRoommates] = useState('')
-
+    /**
+     * This function listens to the click of the button and calls the update of a range of properties
+     * @param e the listener
+     */
     const onSubmit = (e) => {
         e.preventDefault()
         onGet({
@@ -44,7 +56,9 @@ const FormPost = ({onGet}) => {
             "roommates": roommates.trim(),
         })
     }
-
+    /**
+     * JSX of the form
+     */
     return (
         <form className='form-control' onSubmit={onSubmit}>
 

@@ -3,11 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { CSVLink } from "react-csv";
 import { BASE_URL } from '../../App';
 
+/**
+ * This form gets the id of the property that the user wants to either find or delete
+ * @param onGet the function that is going to use the input id to either delete the property
+ * @return {JSX.Element}the form that we want to display
+ * @constructor
+ */
 const FormId = ({onGet}) => {
     const [id, setId] = useState('')
     const [csvChecked, setCsvChecked] = useState(false);
     const [data, setData] = useState('');
 
+    /**
+     * This function listens to the click of the button and calls the research or the deletion of a property
+     * @param event the listener
+     */
     const onSubmit = (event) => {
         event.preventDefault()
         const opt = event.target.name; // option -> delete or find
@@ -34,6 +44,9 @@ const FormId = ({onGet}) => {
         }
     }, [csvChecked])
 
+    /**
+     * JSX of the form
+     */
     return (
         <form className='form-control' onSubmit={onSubmit}>
             <label>Id</label>
