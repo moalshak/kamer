@@ -226,9 +226,6 @@ class CityPrefListView(ListAPIView):
         # Order by :: Default : rent
         orderBY = self.request.GET.get('orderBy', 'rent')
 
-        N = self.request.GET.get("N", 10)
-        PageNumberPagination.page_size = N
-
         # Ascending or Descending :: Default : Ascending
 
         ascOrDesc = self.request.GET.get('ascOrDesc', 'ASC')
