@@ -21,28 +21,33 @@ const FormId = ({onGet}) => {
     const onSubmit = (event) => {
         event.preventDefault()
         const opt = event.target.name; // option -> delete or find
-        onGet(id.trim(), opt , csvChecked)
+        onGet(id.trim(), opt)
     }
 
+    const [update, setUpdate] = useState(false);
+
     useEffect(async () => {
-        if(id != ''){
-            try {
-                const response = await axios.get(`${BASE_URL}id/${id}/?format=csv`);
-                setData(response.data);
-                console.log(data);
-                /*axios({
-                    method: 'GET',
-                    url: `${BASE_URL}id/${id}/?format=csv`,
-                }).then((res) => {
-                    console.log(res.data);
-                    setData(res.data);
-                });*/
-            } catch (error) {
-                console.log(`${id} does not exist`);
-            }
+        try {
+            const response = await axios.get(`${BASE_URL}id/${id}/?format=csv`);
+            console.log(response.data);
+            setData(response.data);
             
+            // console.log(data);
+            /*axios({
+                method: 'GET',
+                url: `${BASE_URL}id/${id}/?format=csv`,
+            }).then((res) => {
+                console.log(res.data);
+                setData(res.data);room-1686123
+            });*/
+        } catch (error) {
+            console.log(error);
+            
+            console.log(`${id} does not exist`);
         }
-    }, [csvChecked])
+    }, [update]);
+
+    
 
     /**
      * JSX of the form
@@ -57,11 +62,13 @@ const FormId = ({onGet}) => {
             <label>Do you want CSV output</label>
             <input type='checkbox' name="csv" onChange={() => setCsvChecked(!csvChecked)}/>
             {/*<a href={`${BASE_URL}id/${id}/?format=csv`}> Download CSV </a>*/}
-            {csvChecked && <CSVLink
+            <CSVLink onClick={() => {
+                setUpdate(true)
+                }}
                 data={data}
                 >
                 Download me
-            </CSVLink>}
+            </CSVLink>
             <button onClick={onSubmit} name="find">Find Property</button>
             <button onClick={onSubmit} name="del">Delete Property</button>
         </form>

@@ -5,15 +5,15 @@ info:
   version: 0.1.9
 
 servers:
-  - url: https://api.server.test/v1
+  - url: https://team13.xyz/
 
 paths:
  
-  /properties/:
+  /api/:
     get:
       tags:
-        - All api
-      summary: lists all api
+        - All Properties
+      summary: lists all properties
       responses:
         '200':
           description: OK
@@ -48,7 +48,7 @@ paths:
           $ref: '#/components/responses/ServerError'
      
         
-  /properties/id/{externalId}:
+  /api/id/{externalId}:
   
     parameters:
         - $ref: '#/components/parameters/externalId'
@@ -119,7 +119,7 @@ paths:
           $ref: '#/components/responses/ServerError'
 
 
-  /properties/location/:
+  /api/location/:
     parameters:
       - $ref: '#/components/parameters/contentType'
       - $ref: '#/components/parameters/longitude'
@@ -188,7 +188,7 @@ paths:
         '5XX':
           $ref: '#/components/responses/ServerError'
 
-  /properties/city/{city}: 
+  /api/city/{city}: 
     parameters:
       - $ref: '#/components/parameters/city'
       - $ref: '#/components/parameters/minRange'
@@ -229,7 +229,7 @@ paths:
 
 
 
-  /properties/city/stats/{city}:
+  /api/city/stats/{city}:
     parameters:
       - $ref: '#/components/parameters/city'
           
@@ -247,6 +247,21 @@ paths:
             text/csv:
               schema:
                 $ref: '#/components/schemas/CityStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+
+  /api/log:          
+    get:
+      tags:
+        - Logging in
+      summary: A user logs in
+      responses:
+        '200':
+          description: OK
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':

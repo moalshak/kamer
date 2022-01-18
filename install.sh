@@ -7,7 +7,7 @@ sudo apt-get install python3 python3-pip nodejs -y
 
 
 # install virtualenv and create the env
-pip3 install virtualenv
+sudo apt install python3-virtualenv -y
 virtualenv env && source env/bin/activate
 
 # install the requierments

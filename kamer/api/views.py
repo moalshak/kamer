@@ -16,7 +16,7 @@ from rest_framework.decorators import (
 )
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework_csv.renderers import CSVRenderer
@@ -44,7 +44,7 @@ class PropertiesListView(ListAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
     authentication_classes = (TokenAuthentication, SessionAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     pagination_class = PageNumberPagination
     PageNumberPagination.page_size = 10
 
@@ -82,8 +82,9 @@ def add_property(request):
 @api_view(["GET", "PUT", "DELETE"])
 @renderer_classes((JSONRenderer, BrowsableAPIRenderer, CSVRenderer))
 @authentication_classes((SessionAuthentication, TokenAuthentication))
-@permission_classes((IsAuthenticated,))
+@permission_classes((AllowAny,))
 def property_by_id(request, externalId, format=None):
+    PageNumberPagination.page_size = 10
     try:
         p = Property.objects.get(externalId=externalId)
     except Property.DoesNotExist:
@@ -118,8 +119,9 @@ def property_by_id(request, externalId, format=None):
 class get_propertyByLocation(ListAPIView):
     serializer_class = PropertySerializer
     authentication_classes = (TokenAuthentication, SessionAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     pagination_class = PageNumberPagination
+    PageNumberPagination.page_size = 10
 
     def get_queryset(self):
         try:
@@ -167,7 +169,7 @@ class get_propertyByLocation(ListAPIView):
 @api_view(["GET"])
 @renderer_classes((BrowsableAPIRenderer, JSONRenderer, CSVRenderer))
 @authentication_classes((SessionAuthentication, TokenAuthentication))
-@permission_classes((IsAuthenticated,))
+@permission_classes((AllowAny,))
 def stats(request, city, format=None):
     if request.method == "GET":
         p = Property.objects.filter(city=city)
@@ -230,7 +232,7 @@ class CityPrefListView(ListAPIView):
     ##################################################
     serializer_class = PropertySerializer
     authentication_classes = (TokenAuthentication, SessionAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     pagination_class = PageNumberPagination
 
     def get_queryset(self):

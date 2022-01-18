@@ -60,11 +60,11 @@ function App() {
      * @param id the id of the property
      * @param opt the option : delete or find
      * */
-    const onIdGet = async (id, opt, csvChecked) => {
-        let format = (csvChecked === false) ? 'json' : 'csv';
-        if(format === 'json'){
+    const onIdGet = async (id, opt) => {
+        //let format = (csvChecked === false) ? 'json' : 'csv';
+        //if(format === 'json'){
             if (opt === 'find') {
-                const curr = `${BASE_URL}id/${id}/?format=${format}`;
+                const curr = `${BASE_URL}id/${id}/?format=json`;
                 setNav({
                     ...nav,
                     curr: curr,
@@ -73,14 +73,14 @@ function App() {
                 const curr = `${BASE_URL}id/${id}/`;
                 await delProperty(curr, {});
             }
-        } else {
-            axios({
-                method: 'GET',
-                url: `${BASE_URL}id/${id}/?format=${format}`,
-            }).then((res) => {
-                console.log(res.data);
-            });
-        }  
+        //} else {
+            // axios({
+            //     method: 'GET',
+            //     url: `${BASE_URL}id/${id}/?format=${format}`,
+            // }).then((res) => {
+            //     console.log(res.data);
+            // });
+        //}  
     }
 
     /**

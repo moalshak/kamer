@@ -66,19 +66,19 @@ const FormCity = ({onGet}) => {
             <label>Max Price</label>
             <input type='text' placeholder='type Max Price' value={maxPrice} onChange={(e) => {
                 setMaxPrice(e.target.value)
-            }}/>
+            }} type="number" min="0" />
             <label>Min Price</label>
             <input type='text' placeholder='type Min Price' value={minPrice} onChange={(e) => {
                 setMinPrice(e.target.value)
-            }}/>
+            }} type="number" min="0" />
             <label>Max Area</label>
             <input type='text' placeholder='type Max Area' value={maxArea} onChange={(e) => {
                 setMaxArea(e.target.value)
-            }}/>
+            }} type="number" min="0" />
             <label>Min Area</label>
             <input type='text' placeholder='type Min Area' value={minArea} onChange={(e) => {
                 setMinArea(e.target.value)
-            }}/>
+            }} type="number" min="0"/>
 
             <label>Pets</label>
             <select  name="dropdown" id="dropdown" value={pets_choice} onChange={(e) => {setPets_choice(e.target.value)}}>
@@ -90,9 +90,9 @@ const FormCity = ({onGet}) => {
             <label>sqmBudget</label>
             <input type='text' placeholder='type sqmBudget' value={sqmBudget} onChange={(e) => {
                 setSqmBudget(e.target.value)
-            }}/>
+            }} type="number" min="0"/>
 
-            <label>Number of properties displayed </label>
+            <label>Number of properties </label>
             <input type='text' placeholder='Number of Results' value={N} onChange={(e) => {
                 setN(e.target.value)
             }} required={true} type="number" min="0" />
