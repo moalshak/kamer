@@ -9,7 +9,8 @@ sudo apt-get update -y && sudo apt-get upgrade -y
 sudo apt-get install curl
 # install node version 16 && npm
 curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt-get install nodejs npm -y 
+sudo apt-get install nodejs -y
+sudo apt-get install npm -y
 
 # install python and pip
 sudo apt-get install python3 python3-pip -y

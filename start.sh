@@ -2,7 +2,7 @@
 
 
 # run env
-source ../env/bin/activate
+source env/bin/activate
 
 # cd into the folder
 cd kamer/react-frontend
@@ -14,6 +14,9 @@ npm install
 
 # build the website
 npm run build
+
+# go back a dir
+cd ..
 
 # start the server (REACT)
 python3 manage.py collectstatic --noinput

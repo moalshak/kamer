@@ -12,7 +12,7 @@ import StatsModal from "./Components/StatsModal";
 // import PropertyFeed from './Components/PropertyFeed';
 // import InputPanel from './Components/InputPanel';
 
-export const BASE_URL = "https://www.team13.xyz/api/";
+export const BASE_URL = "http://127.0.0.1:8000/api/"; 
 
 function App() {
 
