@@ -24,8 +24,6 @@ from rest_framework_csv.renderers import CSVRenderer
 from .models import Property
 from .serializers import PropertySerializer, StatsSerializer
 
-PAGE_SIZE_ = 10
-
 
 def api_home_page(request):
     return render(request, "api/api_home.html")
@@ -48,6 +46,7 @@ class PropertiesListView(ListAPIView):
     authentication_classes = (TokenAuthentication, SessionAuthentication)
     permission_classes = (IsAuthenticated,)
     pagination_class = PageNumberPagination
+    PageNumberPagination.page_size = 10
 
     def post(self, request, *args, **kwargs):
         return add_property(request)
