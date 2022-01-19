@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # run env
 source env/bin/activate
 
@@ -40,8 +39,11 @@ python3 manage.py collectstatic --noinput
 #     echo "The server has started at http://127.0.0.1:8000/" 
 # fi
 
-python3 manage.py runserver &
-# message
-echo "The server has started at http://127.0.0.1:8000/"
-echo "You can also visit our website at : https://wwww.team13.xyz/ which hosts both our back and frontend"
+screen -d -m python3 manage.py runserver
 
+# message
+echo "############################################"
+echo "The server has started at http://127.0.0.1:8000/ and is running in the "
+echo "You can also visit our website at : https://www.team13.xyz/ which hosts both our back and frontend"
+echo "In order to go back to the terminal where the server is running do :: screen -r"
+echo "############################################"
