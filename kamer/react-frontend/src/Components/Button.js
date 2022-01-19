@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
 
+/**
+ * A default template for a button with an onCLick function.
+ * 
+ * @param {*} param0 an object containing the function the button text as well as the form to be spawned.
+ * @returns a custom html button
+ */
 function Button({ text, form, onButtonClick }) {
     function onButtonClickLocal() {
         onButtonClick(form);

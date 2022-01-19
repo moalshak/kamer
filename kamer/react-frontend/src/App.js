@@ -9,14 +9,19 @@ import Edit from "./Components/Routes/Edit";
 import Page404 from "./Components/Routes/Page404";
 import StatsModal from "./Components/StatsModal";
 
-// import PropertyFeed from './Components/PropertyFeed';
-// import InputPanel from './Components/InputPanel';
-
+//the base url that the frontend will make requests to
 export const BASE_URL = "http://127.0.0.1:8000/api/"; 
 
+/**
+ * This function represents the parent component of the application and also contains the 
+ * functions that get called for retrieving resource state from the backend.
+ * 
+ * @returns the parent component
+ */
 function App() {
-
+    //authorization header made default
     axios.defaults.headers.common['Authorization'] = 'Token ff27fca94c0c9461da6e327389e7b633224cd2fa'
+    //stats modal state
     const [showModal, setShowModal] = useState(false);
     const [statsModalState, setStatsModalState] = useState({
         city: "none",
@@ -41,7 +46,10 @@ function App() {
     //show forms state
     const [showForm, setShowForm] = useState('')
 
-    /***/
+    /**
+     * What happens when a button on the control panel is clicked.
+     * Either get all properties or show one of the forms.
+    */
     const onControlPanelClick = async (form) => {
         /* the form is undefined whenever the `search by all` is clicked */
         if (form === undefined) {
@@ -57,12 +65,13 @@ function App() {
 
     /**
      * search by id is clicked
+     * retrieves a property by its id
+     * or deletes by id
+     * 
      * @param id the id of the property
      * @param opt the option : delete or find
      * */
     const onIdGet = async (id, opt) => {
-        //let format = (csvChecked === false) ? 'json' : 'csv';
-        //if(format === 'json'){
             if (opt === 'find') {
                 const curr = `${BASE_URL}id/${id}/?format=json`;
                 setNav({
@@ -73,18 +82,12 @@ function App() {
                 const curr = `${BASE_URL}id/${id}/`;
                 await delProperty(curr, {});
             }
-        //} else {
-            // axios({
-            //     method: 'GET',
-            //     url: `${BASE_URL}id/${id}/?format=${format}`,
-            // }).then((res) => {
-            //     console.log(res.data);
-            // });
-        //}  
     }
 
     /**
      * location query
+     * retrieves by latitude and longitude
+     * 
      * @param lat the latitude
      * @param long the longitude
      * */
@@ -98,6 +101,7 @@ function App() {
 
     /**
      * City stats
+     * Retrieves the statistics of the city
      *
      * @param city the city call the api for
      * */
@@ -111,15 +115,27 @@ function App() {
         setShowModal(true);
     }
 
-    
+    /**
+     * Posts a property
+     * 
+     * @param {*} details the details of the property to be posted
+     */
     const onPropertyPost = async (details) => {
         await postProperty(`${BASE_URL}all/?format=json`, details)
     }
 
+    /**
+     * 
+     * @param {*} details the details of the property to be update
+     */
     const onIdPut = async (details) => {
         await putId(`${BASE_URL}id/${details["externalId"]}/?format=json`, details)
     }
 
+    /**
+     * 
+     * @param {*} details the details of the property to be updated
+     */
     const onLocationPut = async (details) => {
         await putLocation(`${BASE_URL}location/?format=json&latitude=${details["latitude"]}&longitude=${details["longitude"]}`, details);
     }
@@ -137,7 +153,9 @@ function App() {
         });
     }
 
-
+    /**
+     * The main component
+     */
     return (
         <Router>
             <Routes>
@@ -177,6 +195,13 @@ function App() {
     );
 }
 
+/**
+ * The function that sets the query params of the city pref endpoint.
+ * 
+ * @param {*} pref the query params
+ * @param {*} format resource format
+ * @returns the url to be used
+ */
 export function fuck(pref, format) {
     let curr = `${BASE_URL}city/${pref.city}/?&format=${format}`;
     if (pref.page_size !== '') {

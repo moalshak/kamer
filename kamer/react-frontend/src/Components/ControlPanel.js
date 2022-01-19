@@ -1,6 +1,12 @@
 import React from "react";
 import Button from "./Button";
 
+/**
+ * The component that contains all the buttons responsible for spawning forms.
+ * 
+ * @param {*} param0 a function that should trigger on a button click
+ * @returns the component containing the buttons
+ */
 function ControlPanel({onButtonClick}) {
     return (
         <div className="controlPanel">
