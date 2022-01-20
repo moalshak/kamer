@@ -1,33 +1,37 @@
 #!/bin/bash
 
 # in the pdf it was mentioned that the script will be ran as root
-#  this makes the sudo's redundant, but just in case
+#  this makes the 's redundant, but just in case
 #
 
 echo "Please make sure your system is up to date"
-# sudo apt-get update -y  && sudo apt-get upgrade -y 
+apt update -y  && apt upgrade -y
 
 # Install node version 16
 
 echo "installing curl"
-sudo apt-get install curl -y
+apt install curl -y
 # install node version 16 && npm
 echo "installing node version 16 & npm"
-curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt-get install nodejs -y
+curl -sL https://deb.nodesource.com/setup_16.x | bash -
+
+apt autoremove
+apt update -y  && apt upgrade -y
+
+apt install nodejs -y
 echo "installing npm"
-sudo apt-get install npm -y
+apt install npm -y
 
 # install python and pip
 echo "installing python"
-sudo apt-get install python3 python3-pip -y
+apt install python3 python3-pip -y
 # sometimes pip does not get the latest version
 echo "upgrading pip"
-python3 -m pip install --upgrade pip -y
+python3 -m pip install --upgrade pip
 
 echo "installing the virtualenv"
 # install virtualenv and create the env
-sudo apt-get install python3-virtualenv -y
+apt install python3-virtualenv -y
 echo "Making a virtual enviourment and activating it"
 virtualenv env && source env/bin/activate
 
@@ -43,7 +47,10 @@ cd kamer/react-frontend && npm install
 cd ..
 
 echo "Installing node screen"
-sudo apt-get install screen -y
+apt install screen -y
+
+# install nettools for ifconfig
+apt install net-tools -y
 
 # done
 echo "Everything installed successfully"

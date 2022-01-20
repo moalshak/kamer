@@ -8,7 +8,7 @@ cd kamer/react-frontend
 
 
 # this fixed a no module found
-rm -rf node_modules
+# rm -rf node_modules
 npm install
 
 # build the website
@@ -43,7 +43,12 @@ screen -d -m python3 manage.py runserver
 
 # message
 echo "############################################"
-echo "The server has started at http://127.0.0.1:8000/ and is running in the "
+echo "The server has started at http://127.0.0.1:8000/ and is running."
 echo "You can also visit our website at : https://www.team13.xyz/ which hosts both our back and frontend"
+
+echo "############################################"
 echo "In order to go back to the terminal where the server is running do :: screen -r"
+echo "To visit the website on your host machine see the following output"
+# show the ip of the container
+ifconfig | grep inet
 echo "############################################"
