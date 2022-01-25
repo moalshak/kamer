@@ -91,10 +91,14 @@ function Edit({onGet}) {
             "pageTitle": pageTitle,
             "pets": pets,
             "roommates": roommates
+        }).then(
+            () => {
+                setLoading(false);
+            }
+        ).then(() => {
+            // redirect to the page (GET request)
+            navigate(`/property/${exId}`)
         });
-        setLoading(false);
-        // redirect to the page (GET request)
-        navigate(`/property/${exId}`)
     }
 
     return (

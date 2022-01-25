@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { BASE_URL } from "../../App"
+import React, { useState } from 'react';
+import { BASE_URL } from "../../App";
+
 
 /**
  * This form gets the latitude and longitude of the properties we want to research
@@ -11,6 +12,7 @@ const FormLongLat = ({onGet}) => {
     
     const [longitude, setLongitude] = useState('')
     const [latitude, setLatitude] = useState('')
+    
     /**
      * This function listens to the click of the button and calls the research a range of properties
      * @param e the listener

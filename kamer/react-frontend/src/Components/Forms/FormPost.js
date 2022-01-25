@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 /**
  * This form gets all the information necessary information to post a new property in the database
@@ -14,21 +15,24 @@ const FormPost = ({onGet}) => {
     const [areaSqm, setAreaSqm] = useState('')
     const [city, setCity] = useState('')
     const [coverImageUrl, setCoverImageUrl] = useState('')
-    const [furnish, setFurnish] = useState('')
+    const [furnish, setFurnish] = useState('Furnished')
     const [longitude, setLongitude] = useState('')
     const [latitude, setLatitude] = useState('')
     const [postalCode, setPostalCode] = useState('')
-    const [propertyType, setPropertyType] = useState('')
+    const [propertyType, setPropertyType] = useState('Studio')
     const [rent, setRent] = useState('')
     const [title, setTitle] = useState('')
     const [additionalCost, setAdditionalCost] = useState('')
     const [deposit, setDeposit] = useState('')
     const [descriptionTranslated, setDescriptionTranslated] = useState('')
-    const [gender, setGender] = useState('')
+    const [gender, setGender] = useState('Male')
     const [pageDescription, setPageDescription] = useState('')
     const [pageTitle, setPageTitle] = useState('')
-    const [pets, setPets] = useState('')
+    const [pets, setPets] = useState('Yes')
     const [roommates, setRoommates] = useState('')
+
+    const navigate = useNavigate();
+
     /**
      * This function listens to the click of the button and calls the function to post  a properties
      * @param e the listener
@@ -56,7 +60,10 @@ const FormPost = ({onGet}) => {
             "pageTitle": pageTitle.trim(),
             "pets": pets.trim(),
             "roommates": roommates.trim(),
-        })
+        }).then(() => {
+            // redirect to the page (GET request)
+            navigate(`/property/${externalId}`)
+        });
     }
     /**
      * The JSX of the form

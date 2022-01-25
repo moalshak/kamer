@@ -10,7 +10,7 @@ import Page404 from "./Components/Routes/Page404";
 import StatsModal from "./Components/StatsModal";
 
 //the base url that the frontend will make requests to
-export const BASE_URL = "http://127.0.0.1:8000/api/"; 
+export const BASE_URL = "https://www.team13.xyz/api/"; 
 
 /**
  * This function represents the parent component of the application and also contains the 
@@ -79,8 +79,13 @@ function App() {
                     curr: curr,
                 });
             } else if (opt === 'del') {
-                const curr = `${BASE_URL}id/${id}/`;
+                let curr = `${BASE_URL}id/${id}/`;
                 await delProperty(curr, {});
+                curr = `${BASE_URL}all/?format=json&page=1`;
+                setNav({
+                    ...nav,
+                    curr: curr,
+                });
             }
     }
 
@@ -121,7 +126,12 @@ function App() {
      * @param {*} details the details of the property to be posted
      */
     const onPropertyPost = async (details) => {
-        await postProperty(`${BASE_URL}all/?format=json`, details)
+        const curr = `${BASE_URL}all/?format=json`;
+        await postProperty(curr, details)
+        setNav({
+            ...nav,
+            curr: curr,
+        });
     }
 
     /**
@@ -129,7 +139,12 @@ function App() {
      * @param {*} details the details of the property to be update
      */
     const onIdPut = async (details) => {
-        await putId(`${BASE_URL}id/${details["externalId"]}/?format=json`, details)
+        const curr = `${BASE_URL}id/${details["externalId"]}/?format=json`; 
+        await putId(curr, details);
+        setNav({
+            ...nav,
+            curr: curr,
+        });
     }
 
     /**
@@ -137,7 +152,12 @@ function App() {
      * @param {*} details the details of the property to be updated
      */
     const onLocationPut = async (details) => {
-        await putLocation(`${BASE_URL}location/?format=json&latitude=${details["latitude"]}&longitude=${details["longitude"]}`, details);
+        const curr = `${BASE_URL}location/?format=json&latitude=${details["latitude"]}&longitude=${details["longitude"]}`;
+        await putLocation(curr, details);
+        setNav({
+            ...nav,
+            curr: curr,
+        });
     }
 
     /**
