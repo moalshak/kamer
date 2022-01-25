@@ -5,13 +5,17 @@
       The construction process for our deployable web app with front and back-end to
         view the available rental properties in the Netherlands. <br/> <br/>
         Mohammad Al Shakoush (s4274865), Dominic Therattil (s4228952),<br/>
-        Tudor Dragan (s), Mohammed Nacer Lazrak (s4335473)
+        Tudor Dragan (s4394887), Mohammed Nacer Lazrak (s4335473)
   </p>
 </p>
  
 
 ## Milestone 1 - API Design
-For the development of our API specification we had some trouble in the beginning this was mainly in trying to understand the RESTful API syntax. However, once this was overcomed we progressed quickly.
+For the development of our API specification we had some trouble in the beginning. This was mainly in trying to understand the OpenAPI syntax. However, once this was overcomed we progressed quickly. We also spent quite a lot of time comping up with the design for the URLs and how they are going to interact. The ones that posed the biggest problem were the endpoints that in the end we decided to merge into one big one. We wanted to offer the user the best experience so we also spent some time on decinding extra functionality and endpoints we would implement. These are listed below:
+<ul>
+  <li> The main one is the one that returns all the properties in the database. This way the user can navigate through the pagination we implemented.</li>
+  <li>The other extra is adding a lot of different search parameters for the endpoint we merged. This way the user can select a lot of different search parameters so he can find the room that fits him best.</li>
+</ul>
  
 ## Milestone 2 - API Implementation
 The processes that led to the development of our backend was initially quite challenging and somewhat daunting. This is because we had a great deal of freedom in deciding between what framework to utilize to implement our API endpoints. This led to a lack of direction and had us in standstill since we didn’t know how to actually start.
