@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../App";
 import MapBuilder from "./MapBuilder";
-import {BASE_URL} from "../App";
 
 /**
  * Calls the API through a get method
