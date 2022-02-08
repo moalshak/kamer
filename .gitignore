@@ -1,3 +1,9 @@
+static
+node_modules
+env
+.vscode
+.idea
+junk*
 properties.json
 
 # Compiled class file
