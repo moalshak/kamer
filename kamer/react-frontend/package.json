@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.24.0",
     "leaflet": "^1.7.1",
-    "mongoose": "^6.1.6",
+    "mongoose": "^6.13.6",
     "proptypes": "^1.1.0",
     "react": "^17.0.2",
     "react-csv": "^2.2.2",
